@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <DebugEnabled>False</DebugEnabled>
+        <VMWareEdition>Player</VMWareEdition>
+        <VBEResolution>640x480x32</VBEResolution>
+        <BinFormat>Elf</BinFormat>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Art\Icons\PowerOff.bmp" />
+      <None Remove="Art\Icons\Restart.bmp" />
+      <None Remove="Art\Icons\ReturnToConsole.bmp" />
+      <None Remove="Art\Icons\xp_arrow.bmp" />
+      <None Remove="Art\Icons\xp_link.bmp" />
+      <None Remove="Art\Icons\xp_pencil.bmp" />
+      <None Remove="Art\Wallpapers\BG.bmp" />
+      <None Remove="Art\Wallpapers\dream_places.bmp" />
+      <None Remove="Fonts\DefaultFont.ttf" />
+      <None Remove="isoFiles\he_he_he_ha.wav" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Art\Icons\PowerOff.bmp" />
+      <EmbeddedResource Include="Art\Icons\Restart.bmp" />
+      <EmbeddedResource Include="Art\Icons\ReturnToConsole.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_arrow.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_link.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
+      <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
+      <EmbeddedResource Include="isoFiles\he_he_he_ha.wav" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="CosmosFtpServer" Version="1.0.1" />
+    </ItemGroup>
+
+</Project>
