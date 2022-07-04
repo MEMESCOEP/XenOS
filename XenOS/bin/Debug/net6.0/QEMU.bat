@@ -1,3 +1,3 @@
 @echo off
 echo Starting QEMU...
-"C:\Program Files\qemu\qemu-system-x86_64.exe" -cdrom .\XenOS.iso
+"C:\Program Files\qemu\qemu-system-x86_64.exe" -cdrom .\XenOS.iso -vga vmware

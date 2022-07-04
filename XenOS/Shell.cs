@@ -6,7 +6,7 @@ namespace XenOS
     {
         // Variables
         public static string OsName = "XenOS";
-        public static string Version = "Alpha 070322_1250A";
+        public static string Version = "Alpha 070322_343P";
         public static int ScreenWidth = 800;
         public static int ScreenHeight = 600;
 

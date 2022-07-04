@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using IL2CPU.API.Attribs;
+using Cosmos.System.Graphics;
+using System.Threading;
 
 namespace XenOS
 {
@@ -282,7 +284,14 @@ namespace XenOS
                     var path = input.Substring(6);
                     if (Directory.Exists(Path.Combine(CWD, path)))
                     {
-                        Directory.Delete(Path.Combine(CWD, path));
+                        if(CWD != Path.Combine(CWD, path))
+                        {
+                            Directory.Delete(Path.Combine(CWD, path));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cannot delete the directory because it's in the current working directory!");
+                        }
                     }
                     else
                     {
@@ -533,11 +542,37 @@ namespace XenOS
                 Kernel.KernelPanic("USER GENERATED PANIC", "User invoked kernel panic from the command line!");
             }
 
-            // MOUSESTATE (Mouse state)
-            else if(input == "MouseState")
+            // MODES (Canvas Modes)
+            else if(input == "modes")
             {
-                ShowMouseState showMouseState = new ShowMouseState();
-                showMouseState.Show();
+                Canvas canvas = FullScreenCanvas.GetFullScreenCanvas();
+                foreach(var mode in canvas.AvailableModes)
+                {
+                    Console.WriteLine(mode.Columns + "x" + mode.Rows);
+                }
+                canvas.Disable();
+                canvas = null;
+            }
+
+            // ECHO (Print text)
+            else if(input.Contains("echo "))
+            {
+                var txt = input.Substring(5);
+                Console.WriteLine(txt);
+            }
+
+            // TIMEOUT (Pause console)
+            else if (input.Contains("timeout "))
+            {
+                try
+                {
+                    var ms = input.Substring(8);
+                    Thread.Sleep(Convert.ToInt32(ms));
+                }
+                catch(Exception EX)
+                {
+                    Console.WriteLine("ERROR: " + EX.Message);
+                }
             }
 
             // EMPTY COMMAND

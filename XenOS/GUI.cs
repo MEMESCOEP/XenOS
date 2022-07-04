@@ -28,7 +28,7 @@ namespace XenOS
         [ManifestResourceStream(ResourceName = "XenOS.Art.Icons.Restart.bmp")]
         static byte[] RestartIcon;
 
-        [ManifestResourceStream(ResourceName = "XenOS.Art.Icons.ReturnToConsole.bmp")]
+        [ManifestResourceStream(ResourceName = "XenOS.Art.Icons.terminal.bmp")]
         static byte[] RTCIcon;
 
         public bool DrawNormalCursors = true;
@@ -43,8 +43,6 @@ namespace XenOS
         public void INIT()
         {
             Console.Write("Press ESCAPE to exit the gui.\n");
-            Thread.Sleep(1000);
-
             Canvas canvas = FullScreenCanvas.GetFullScreenCanvas();
             canvas.Mode = new Mode(Shell.ScreenWidth, Shell.ScreenHeight, ColorDepth.ColorDepth32);
             canvas.Clear(Color.Green);

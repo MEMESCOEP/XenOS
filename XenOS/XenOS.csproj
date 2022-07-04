@@ -30,6 +30,7 @@
       <None Remove="Art\Icons\PowerOff.bmp" />
       <None Remove="Art\Icons\Restart.bmp" />
       <None Remove="Art\Icons\ReturnToConsole.bmp" />
+      <None Remove="Art\Icons\terminal.bmp" />
       <None Remove="Art\Icons\xp_arrow.bmp" />
       <None Remove="Art\Icons\xp_link.bmp" />
       <None Remove="Art\Icons\xp_pencil.bmp" />
@@ -43,6 +44,7 @@
       <EmbeddedResource Include="Art\Icons\PowerOff.bmp" />
       <EmbeddedResource Include="Art\Icons\Restart.bmp" />
       <EmbeddedResource Include="Art\Icons\ReturnToConsole.bmp" />
+      <EmbeddedResource Include="Art\Icons\terminal.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_arrow.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_link.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
