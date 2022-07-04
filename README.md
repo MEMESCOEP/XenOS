@@ -19,6 +19,10 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 * SB16 / AC97 Audio Driver
 * Add USB Support
 * Add NTFS / EXT Filesystem support
+* Add .NET executable support
+* Add more GUI stuff
+* Add append and write commands
+* Add users
 
 ## Building
 Prerequisites:
