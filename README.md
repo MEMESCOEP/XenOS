@@ -23,6 +23,8 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 * Add more GUI stuff
 * Add append and write commands
 * Add users
+* Add ping command
+* Make Window Manager
 
 ## Building
 Prerequisites:
