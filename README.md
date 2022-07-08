@@ -30,6 +30,6 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 Prerequisites:
 * VMWare Player
 * Visual Studio 2022
-* The latest version of the Cosmos OS Devkit (https://github.com/CosmosOS/Cosmos)
+* The latest version of ascpixi's fork of the Cosmos OS Devkit (https://github.com/ascpixi/Cosmos/tree/cosmos-audio-infrastructure)
 
 Please note that this Readme is still being edited.
