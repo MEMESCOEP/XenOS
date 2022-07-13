@@ -1,97 +1,60 @@
-﻿using System;
+﻿using Cosmos.System.Audio;
+using Cosmos.System.Audio.DSP.Processing;
+using Cosmos.System.Audio.IO;
+using System;
 using System.IO;
-using System.Threading;
 
 namespace XenOS
 {
     internal class AudioPlayer
     {
-        public static void main()
+        public void PlayWAV(string path)
         {
-            Note[] Mary =
+            try
             {
-                new Note(Tone.B, Duration.QUARTER),
-                new Note(Tone.A, Duration.QUARTER),
-                new Note(Tone.GbelowC, Duration.QUARTER),
-                new Note(Tone.A, Duration.QUARTER),
-                new Note(Tone.B, Duration.QUARTER),
-                new Note(Tone.B, Duration.QUARTER),
-                new Note(Tone.B, Duration.HALF),
-                new Note(Tone.A, Duration.QUARTER),
-                new Note(Tone.A, Duration.QUARTER),
-                new Note(Tone.A, Duration.HALF),
-                new Note(Tone.B, Duration.QUARTER),
-                new Note(Tone.D, Duration.QUARTER),
-                new Note(Tone.D, Duration.HALF)
-            };
-
-            Play(Mary);
-            return;
-        }
-
-        // Play the notes in a song.
-        public static void Play(Note[] tune)
-        {
-            foreach (Note n in tune)
+                if (!Drivers.AudioEnabled)
+                {
+                    throw new Exception("There are no sound devices that can be used!");
+                }
+                byte[] audiodata = File.ReadAllBytes(path);
+                Drivers.audioStream = MemoryAudioStream.FromWave(audiodata);
+                Drivers.audioStream.PostProcessors.Add(new GainPostProcessor(0.5f));
+                Drivers.mixer.Streams.Add(Drivers.audioStream);
+                Drivers.audioManager = new AudioManager()
+                {
+                    Stream = Drivers.mixer,
+                    Output = Drivers.driver
+                };
+                Drivers.audioManager.Enable();
+            }
+            catch(Exception EX)
             {
-                if (n.NoteTone == Tone.REST)
-                {
-                    Thread.Sleep((int)n.NoteDuration);
-                }
-                else
-                {
-                    Console.Beep((int)n.NoteTone, (int)n.NoteDuration);
-                }
+                Console.WriteLine("ERROR: " + EX.Message);
             }
         }
 
-        // Define the frequencies of notes in an octave, as well as 
-        // silence (rest).
-        public enum Tone
+        public void PlayWAVFromBytes(byte[] audiodata)
         {
-            REST = 0,
-            GbelowC = 196,
-            A = 220,
-            Asharp = 233,
-            B = 247,
-            C = 262,
-            Csharp = 277,
-            D = 294,
-            Dsharp = 311,
-            E = 330,
-            F = 349,
-            Fsharp = 370,
-            G = 392,
-            Gsharp = 415,
-        }
-
-        // Define the duration of a note in units of milliseconds.
-        public enum Duration
-        {
-            WHOLE = 1600,
-            HALF = WHOLE / 2,
-            QUARTER = HALF / 2,
-            EIGHTH = QUARTER / 2,
-            SIXTEENTH = EIGHTH / 2,
-        }
-
-        // Define a note as a frequency (tone) and the amount of 
-        // time (duration) the note plays.
-        public struct Note
-        {
-            Tone toneVal;
-            Duration durVal;
-
-            // Define a constructor to create a specific note.
-            public Note(Tone frequency, Duration time)
+            try
             {
-                toneVal = frequency;
-                durVal = time;
+                if (!Drivers.AudioEnabled)
+                {
+                    throw new Exception("There are no sound devices that can be used!");
+                }
+                Drivers.audioStream = MemoryAudioStream.FromWave(audiodata);
+                Drivers.audioStream.PostProcessors.Add(new GainPostProcessor(0.5f));
+                Drivers.mixer.Streams.Add(Drivers.audioStream);
+                Drivers.audioManager = new AudioManager()
+                {
+                    Stream = Drivers.mixer,
+                    Output = Drivers.driver
+                };
+                Drivers.audioManager.Enable();
             }
-
-            // Define properties to return the note's tone and duration.
-            public Tone NoteTone { get { return toneVal; } }
-            public Duration NoteDuration { get { return durVal; } }
+            catch (Exception EX)
+            {
+                Console.WriteLine("ERROR: " + EX.Message);
+            }
         }
     }
 }

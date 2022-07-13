@@ -4,19 +4,19 @@ using System.IO;
 using IL2CPU.API.Attribs;
 using Cosmos.System.Graphics;
 using System.Threading;
+using System.Drawing;
 
 namespace XenOS
 {
     internal class CustomConsole
     {
         // Suppression statements
-        #pragma warning disable IDE0044 // Add readonly modifier
         #pragma warning disable CA1416 // Validate platform compatibility
         #pragma warning disable CS0642 // Possible mistaken empty statement
 
         // Resource files
-        [ManifestResourceStream(ResourceName = "XenOS.isoFiles.he_he_he_ha.wav")]
-        static byte[] test_wav;
+        [ManifestResourceStream(ResourceName = "XenOS.Audio.StartupSound.wav")]
+        private readonly static byte[] StartupSound;
 
         // Variables
         public string CWD = "0:\\";
@@ -26,18 +26,23 @@ namespace XenOS
         public void CMD()
         {
             Console.WriteLine("[INFO -> Console] >> Console loaded.");
+            /*
             Console.WriteLine("[INFO -> Console] >> Writing test audio file...");
-            if (!File.Exists("0:\\heheheha.wav"))
+            if (!File.Exists("0:\\test.wav"))
             {
                 try
                 {
-                    File.WriteAllBytes("0:\\heheheha.wav", test_wav);
+                    File.WriteAllBytes("0:\\test.wav", StartupSound);
                 }
                 catch
                 {
 
                 }
             }
+            */
+
+            Console.Clear();
+            Console.WriteLine("Welcome to " + Shell.OsName + " (" + Shell.Version + ")\nType 'help' for a list of commands.");
 
             if (File.Exists(Path.Combine(CWD, "autoexec")))
             {
@@ -47,24 +52,91 @@ namespace XenOS
                 }
             }
 
-            Console.Clear();
-            Console.WriteLine("Welcome to " + Shell.OsName + " (" + Shell.Version + ")\nType 'help' for a list of commands.");
+            if (Drivers.AudioEnabled)
+            {
+                AudioPlayer player = new AudioPlayer();
+                player.PlayWAVFromBytes(StartupSound);
+            }
+            else
+            {
+                for(int i = 250; i < 4; i += 250)
+                {
+                    Console.Beep(i, 1000);
+                }
+            }
+
             if (Directory.Exists(CWD))
             {
                 Directory.SetCurrentDirectory(CWD);
             }
             else
             {
-                CWD = "NoDisks";
+                CWD = "NoFS";
             }
-            //BootChime bootChime = new BootChime();
-            //bootChime.PlayBootChime();
+
+            if (CWD != "NoFS" && File.Exists("0:\\username"))
+            {
+                var uname = File.ReadAllText("0:\\username");
+                Shell.username = uname;
+            }
+
+            PrintPrompt();
+            string input = "";
             while (KeepCMDOpen == true)
             {
-                Console.Write(CWD + " >> ");
-                var input = Console.ReadLine();
+                input = Console.ReadLine();
                 Interpret(input);
+                PrintPrompt();
+                /*if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Enter)
+                    {
+                        Console.WriteLine();
+                        Interpret(input);
+                        PrintPrompt();
+                        input = "";
+                    }
+                    else if(key.Key != ConsoleKey.LeftArrow && key.Key != ConsoleKey.RightArrow && key.Key != ConsoleKey.DownArrow && key.Key != ConsoleKey.UpArrow)
+                    {
+                        if(key.Key == ConsoleKey.Backspace)
+                        {
+                            if(input.Length > 0)
+                            {
+                                //var cursorPos2 = Console.GetCursorPosition();
+                                input.TrimEnd(input[input.Length - 2]);
+                                Console.Write("\r");
+                                PrintPrompt();
+                                Console.Write(input + " ");
+                                //Console.SetCursorPosition(cursorPos2.Left, cursorPos2.Top);
+                            }
+                        }
+                        else if(key.KeyChar != null)
+                        {
+                            input += key.KeyChar;
+                        }
+                    }
+                }
+                var cursorPos = Console.GetCursorPosition();
+                Console.SetCursorPosition(0, 0);
+                Console.BackgroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("[======================================]");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(cursorPos.Left, cursorPos.Top);
+                */
             }
+        }
+
+        public void PrintPrompt()
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(Shell.username + "#");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(CWD);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" >> ");
         }
 
         public void Interpret(string input)
@@ -75,6 +147,7 @@ namespace XenOS
                 KeepCMDOpen = false;
                 Power power = new Power();
                 power.shutdown();
+                Kernel.KernelPanic("Shutdown Failed!", "Unknown Exception");
             }
 
             // REBOOT
@@ -82,6 +155,7 @@ namespace XenOS
             {
                 Power power = new Power();
                 power.reboot();
+                Kernel.KernelPanic("Reboot Failed!", "Unknown Exception");
             }
 
             // SYSINFO (System information)
@@ -109,6 +183,7 @@ namespace XenOS
                             Console.WriteLine("CPU Speed: [Failure getting CPU speed]");
                         }
                     }
+                    Console.WriteLine("CPU Uptime: " + (Cosmos.Core.CPU.GetCPUUptime()));
                     Console.WriteLine("Total installed memory: " + Cosmos.Core.CPU.GetAmountOfRAM() + " MB");
                     Console.WriteLine("Used memory: " + (Cosmos.Core.CPU.GetAmountOfRAM() - Cosmos.Core.GCImplementation.GetAvailableRAM()) + " MB");
                     Console.WriteLine("Available memory: " + Cosmos.Core.GCImplementation.GetAvailableRAM() + " MB");
@@ -143,11 +218,13 @@ namespace XenOS
                 {
                     foreach (var dir in Directory.GetDirectories(CWD))
                     {
-                        Console.WriteLine(dir + "\t[DIR]");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("[DIR] \t" + dir);
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     foreach (var filename in Directory.GetFiles(CWD))
                     {
-                        Console.WriteLine(filename + "\t[FILE]");
+                        Console.WriteLine("[FILE]\t" + filename);
                     }
                 }
                 catch
@@ -170,7 +247,7 @@ namespace XenOS
             }
 
             // CD (Change Directory)
-            else if (input.Contains("cd "))
+            else if (input.StartsWith("cd "))
             {
                 try
                 {
@@ -192,7 +269,7 @@ namespace XenOS
             }
 
             // CAT
-            else if (input.Contains("cat "))
+            else if (input.StartsWith("cat "))
             {
                 try
                 {
@@ -214,7 +291,7 @@ namespace XenOS
             }
 
             // MKDIR (Make directory)
-            else if (input.Contains("mkdir "))
+            else if (input.StartsWith("mkdir "))
             {
                 try
                 {
@@ -235,7 +312,7 @@ namespace XenOS
             }
 
             // MKF (Make file)
-            else if (input.Contains("mkf "))
+            else if (input.StartsWith("mkf "))
             {
                 try
                 {
@@ -256,7 +333,7 @@ namespace XenOS
             }
 
             // RM (Remove file)
-            else if (input.Contains("rm "))
+            else if (input.StartsWith("rm "))
             {
                 try
                 {
@@ -277,14 +354,14 @@ namespace XenOS
             }
 
             // RMDIR (Remove directory)
-            else if (input.Contains("rmdir "))
+            else if (input.StartsWith("rmdir "))
             {
                 try
                 {
                     var path = input.Substring(6);
                     if (Directory.Exists(Path.Combine(CWD, path)))
                     {
-                        if(CWD != Path.Combine(CWD, path))
+                        if (CWD != Path.Combine(CWD, path))
                         {
                             Directory.Delete(Path.Combine(CWD, path));
                         }
@@ -305,7 +382,7 @@ namespace XenOS
             }
 
             // EXEC (Execute)
-            else if (input.Contains("exec "))
+            else if (input.StartsWith("exec "))
             {
                 try
                 {
@@ -329,7 +406,7 @@ namespace XenOS
             }
 
             // EDIT (edit file)
-            else if (input.Contains("edit "))
+            else if (input.StartsWith("edit "))
             {
                 try
                 {
@@ -369,7 +446,7 @@ namespace XenOS
             }
 
             // URLTOIP (Convert url to ip address)
-            else if (input.Contains("urltoip "))
+            else if (input.StartsWith("urltoip "))
             {
                 UrlToIP urlToIP = new UrlToIP();
                 var url = input.Substring(8);
@@ -399,7 +476,7 @@ namespace XenOS
             }
 
             // BEEP
-            else if (input.Contains("beep "))
+            else if (input.StartsWith("beep "))
             {
                 var freq = input.Substring(5);
                 try
@@ -413,7 +490,7 @@ namespace XenOS
             }
 
             // AUDIOPLAYER
-            else if (input.Contains("audio "))
+            else if (input.StartsWith("audio "))
             {
                 float[] l;
                 float[] r;
@@ -438,7 +515,7 @@ namespace XenOS
             }
 
             // MV (Move file)
-            else if (input.Contains("mv "))
+            else if (input.StartsWith("mv "))
             {
                 try
                 {
@@ -485,7 +562,7 @@ namespace XenOS
             }
 
             // CP (Copy file)
-            else if(input.Contains("cp "))
+            else if (input.StartsWith("cp "))
             {
                 try
                 {
@@ -530,23 +607,23 @@ namespace XenOS
             }
 
             // GUI
-            else if(input == "gui")
+            else if (input == "gui")
             {
                 GUI gui = new GUI();
                 gui.INIT();
             }
 
             // PANIC
-            else if(input == "panic")
+            else if (input == "panic")
             {
                 Kernel.KernelPanic("USER GENERATED PANIC", "User invoked kernel panic from the command line!");
             }
 
             // MODES (Canvas Modes)
-            else if(input == "modes")
+            else if (input == "modes")
             {
                 Canvas canvas = FullScreenCanvas.GetFullScreenCanvas();
-                foreach(var mode in canvas.AvailableModes)
+                foreach (var mode in canvas.AvailableModes)
                 {
                     Console.WriteLine(mode.Columns + "x" + mode.Rows);
                 }
@@ -554,24 +631,164 @@ namespace XenOS
                 canvas = null;
             }
 
+            // TIME
+            else if (input == "time")
+            {
+                Console.WriteLine(Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second);
+            }
+
             // ECHO (Print text)
-            else if(input.Contains("echo "))
+            else if (input.StartsWith("echo "))
             {
                 var txt = input.Substring(5);
                 Console.WriteLine(txt);
             }
 
             // TIMEOUT (Pause console)
-            else if (input.Contains("timeout "))
+            else if (input.StartsWith("timeout "))
             {
                 try
                 {
                     var ms = input.Substring(8);
                     Thread.Sleep(Convert.ToInt32(ms));
                 }
-                catch(Exception EX)
+                catch (Exception EX)
                 {
                     Console.WriteLine("ERROR: " + EX.Message);
+                }
+            }
+
+            // PING
+            else if (input.StartsWith("ping "))
+            {
+                try
+                {
+                    var ip = input.Substring(5);
+                    Ping ping = new Ping();
+                    ping.PingIP(ip);
+                }
+                catch (Exception EX)
+                {
+                    Console.WriteLine("ERROR: " + EX.Message);
+                }
+            }
+
+            // AUDIO (Play wav file(s))
+            else if (input.StartsWith("audio "))
+            {
+                var path = input.Substring(6);
+                if (File.Exists(path))
+                {
+                    AudioPlayer player = new AudioPlayer();
+                    player.PlayWAV(path);
+                }
+                else
+                {
+                    Console.WriteLine("File " + path + " doesn't exist!");
+                }
+            }
+
+            // TESTAUDIO (Test audio device(s))
+            else if (input == "testaudio")
+            {
+                AudioPlayer player = new AudioPlayer();
+                player.PlayWAVFromBytes(StartupSound);
+            }
+
+            // ABOUT
+            else if (input == "about")
+            {
+                About.ShowInfo();
+            }
+
+            // APP (Execute .NET apps)
+            else if (input.StartsWith("app "))
+            {
+                var path = input.Substring(5);
+                if (File.Exists(path))
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine("File " + path + " doesn't exist!");
+                }
+            }
+
+            // APPEND (Append text to file)
+            else if (input.StartsWith("append "))
+            {
+                var path = input.Substring(7).Split(' ')[0];
+                var txt = input.Substring(7 + path.Length + 1);
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        string filedata = File.ReadAllText(path);
+                        txt = txt.Replace("\\n", Environment.NewLine);
+                        filedata += txt;
+                        File.WriteAllText(path, filedata);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("ERROR: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("File " + path + " doesn't exist!");
+                }
+            }
+
+            // WRITE (Write text to file)
+            else if (input.StartsWith("write "))
+            {
+                var path = input.Substring(6).Split(' ')[0];
+                var txt = input.Substring(6 + path.Length + 1);
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        txt = txt.Replace("\\n", Environment.NewLine);
+                        File.WriteAllText(path, txt);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("ERROR: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("File " + path + " doesn't exist!");
+                }
+            }
+
+            // UNAME (Change the username)
+            else if (input.StartsWith("uname "))
+            {
+                var txt = input.Substring(6);
+                if(CWD != "NoFS")
+                {
+                    if (File.Exists("0:\\username"))
+                    {
+                        File.WriteAllText("0:\\username", txt);
+                    }
+                    else
+                    {
+                        File.CreateText("0:\\username");
+                        File.WriteAllText("0:\\username", txt);
+                    }
+                }
+
+                if (CWD != "NoFS" && File.Exists("0:\\username"))
+                {
+                    var uname = File.ReadAllText("0:\\username");
+                    Shell.username = uname;
+                }
+                else
+                {
+                    Console.WriteLine("Your changes are temporary because there is no filesystem.");
+                    Shell.username = txt;
                 }
             }
 

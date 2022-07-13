@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using Cosmos.HAL.Drivers.PCI.Audio;
 
 namespace XenOS
 {
     internal class AudioHelper
     {
+        //PCMStream pcm = new PCMStream(1000, );
         public static bool readWav(string filename, out float[] L, out float[] R)
         {
             L = R = null;

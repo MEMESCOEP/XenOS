@@ -2,6 +2,12 @@
 using Cosmos.System.Network.IPv4.UDP.DHCP;
 using System;
 using System.Threading;
+using Cosmos.HAL.Audio;
+using Cosmos.HAL.Drivers.PCI.Audio;
+using Cosmos.System.Audio;
+using Cosmos.System.Audio.DSP.Processing;
+using Cosmos.System.Audio.IO;
+using IL2CPU.API.Attribs;
 
 namespace XenOS
 {
@@ -9,8 +15,33 @@ namespace XenOS
     {
         // Variables
         public static Cosmos.System.FileSystem.CosmosVFS vfs;
+        public static AudioManager audioManager;
+        public static AudioDriver driver;
+        public static AudioMixer mixer;
+        public static SeekableAudioStream audioStream;
+        public static bool AudioEnabled = false;
 
         // Functions
+        public void Audio()
+        {
+            Console.WriteLine("[INFO -> DRIVERS:Audio] >> Initializing audio driver...");
+
+            try
+            {
+                driver = AC97.Initialize(4096);
+                mixer = new AudioMixer();
+                AudioEnabled = true;
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("[ERROR -> DRIVERS:Audio] >> No AC97 device found.");
+            }
+            catch(Exception EX)
+            {
+                Console.WriteLine("[ERROR -> DRIVERS:Audio] >> " + EX.Message);
+            }
+        }
+
         public void Filesystem()
         {
             try

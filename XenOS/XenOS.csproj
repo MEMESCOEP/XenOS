@@ -27,30 +27,58 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Art\Icons\clock.bmp" />
+      <None Remove="Art\Icons\close_window.bmp" />
+      <None Remove="Art\Icons\notepad.bmp" />
       <None Remove="Art\Icons\PowerOff.bmp" />
       <None Remove="Art\Icons\Restart.bmp" />
       <None Remove="Art\Icons\ReturnToConsole.bmp" />
       <None Remove="Art\Icons\terminal.bmp" />
       <None Remove="Art\Icons\xp_arrow.bmp" />
       <None Remove="Art\Icons\xp_link.bmp" />
+      <None Remove="Art\Icons\xp_move.bmp" />
       <None Remove="Art\Icons\xp_pencil.bmp" />
       <None Remove="Art\Wallpapers\BG.bmp" />
       <None Remove="Art\Wallpapers\dream_places.bmp" />
+      <None Remove="Audio\he_he_he_ha.wav" />
+      <None Remove="Audio\out_of_gum_x.wav" />
+      <None Remove="Audio\SampleAudio.wav" />
+      <None Remove="Audio\StartupSound.wav" />
+      <None Remove="DLLs\CosmosTTF.dll" />
+      <None Remove="DLLs\CosmosTTFRenderer.dll" />
       <None Remove="Fonts\DefaultFont.ttf" />
+      <None Remove="Fonts\OpenSans-Regular.ttf" />
+      <None Remove="Fonts\segoeuil.ttf" />
+      <None Remove="Fonts\seguibl.ttf" />
       <None Remove="isoFiles\he_he_he_ha.wav" />
     </ItemGroup>
 
     <ItemGroup>
+      <Resource Include="DLLs\CosmosTTF.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Art\Icons\clock.bmp" />
+      <EmbeddedResource Include="Art\Icons\close_window.bmp" />
+      <EmbeddedResource Include="Art\Icons\notepad.bmp" />
       <EmbeddedResource Include="Art\Icons\PowerOff.bmp" />
       <EmbeddedResource Include="Art\Icons\Restart.bmp" />
       <EmbeddedResource Include="Art\Icons\ReturnToConsole.bmp" />
       <EmbeddedResource Include="Art\Icons\terminal.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_arrow.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_link.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_move.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
+      <EmbeddedResource Include="Audio\he_he_he_ha.wav" />
+      <EmbeddedResource Include="Audio\out_of_gum_x.wav" />
+      <EmbeddedResource Include="Audio\SampleAudio.wav" />
+      <EmbeddedResource Include="Audio\StartupSound.wav" />
+      <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
       <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
+      <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
+      <EmbeddedResource Include="Fonts\segoeuil.ttf" />
       <EmbeddedResource Include="isoFiles\he_he_he_ha.wav" />
     </ItemGroup>
 
@@ -59,6 +87,12 @@
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="CosmosFtpServer" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="CosmosTTF">
+        <HintPath>DLLs\CosmosTTFRenderer.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

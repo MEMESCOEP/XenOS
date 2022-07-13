@@ -34,3 +34,5 @@ F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.dll
 F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\refint\XenOS.dll
 F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.pdb
 F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\ref\XenOS.dll
+D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\CosmosTTFRenderer.dll
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.CopyComplete
