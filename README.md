@@ -10,10 +10,20 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 * Networking
 * FTP Server
 * PS/2 Keyboard and mouse support
+* AC97 Audio Driver
 
 ## Screenshots
 <img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Screenshots/GUI.png" />
 <img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Screenshots/Console.png" />
+
+## System Requirements
+* An x86 CPU
+* 48 MB Minimum RAM, 64 MB or larger recommended
+* At least 16 MB Graphics RAM
+* PS/2 Keyboard
+* (OPTIONAL) PS/2 Mouse, for GUI
+* (OPTIONAL) 512 MB Hard disk, formatted with the FAT32 Filesystem
+* (OPTIONAL) Intel E1000 Network card or PCnet-FAST III network card
 
 ## Change log:
 * Added AC97 Audio driver
