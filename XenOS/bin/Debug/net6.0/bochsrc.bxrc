@@ -41,7 +41,7 @@ error: action=report
 panic: action=ask
 keyboard: type=mf, serial_delay=250, paste_delay=100000, user_shortcut=none
 mouse: type=ps2, enabled=false, toggle=ctrl+mbutton
-sound: waveoutdrv=win, waveout=none, waveindrv=win, wavein=none, midioutdrv=win, midiout=none
+sound: waveoutdrv=win, waveout="D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\wavelol.txt", waveindrv=win, wavein=none, midioutdrv=win, midiout=none
 speaker: enabled=true, mode=sound, volume=15
 parport1: enabled=true, file=none
 parport2: enabled=false

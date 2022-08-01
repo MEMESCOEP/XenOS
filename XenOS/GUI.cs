@@ -75,18 +75,18 @@ namespace XenOS
             TTFManager.DrawStringTTF(canvas, pen, str, font, size, new Cosmos.System.Graphics.Point(x, y));
         }
 
-        public void DrawStrings(Canvas canvas)
+        public void DrawStrings(Canvas canvas, WindowManager window)
         {
-            DrawString(canvas, "Graphics: " + canvas.Name(), new Pen(Color.Red), 10, Shell.ScreenHeight - 16, "OpenSans", 20f);
             if (windows.Count > 0)
             {
-                foreach(var window in windows)
+                if (window.WindowID == 0)
                 {
-                    if (window.WindowID == 0)
-                    {
-                        DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), new Pen(Color.Black), window.WindowPosX + 10, window.WindowPosY + 60, "OpenSans", 30f);
-                    }
+                    DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), new Pen(Color.Black), window.WindowPosX + 10, window.WindowPosY + 60, "OpenSans", 30f);
                 }
+                /*foreach (var window in windows)
+                {
+                    
+                }*/
             }
         }
 
@@ -133,8 +133,8 @@ namespace XenOS
             Console.WriteLine("[INFO -> GUI] >> Checking if the Bochs Graphics Adapter (BGA) exists...");
             if (FullScreenCanvas.BGAExists())
             {
-                Console.WriteLine("[INFO -> GUI] >> Using VBECanvas.");
-                canvas = new VBECanvas();
+                Console.WriteLine("[INFO -> GUI] >> Using VGACanvas.");
+                canvas = new VGACanvas();
             }
             else
             {
@@ -170,10 +170,32 @@ namespace XenOS
                                 while (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left)
                                 {
                                     CursorBMP = MoveWindow;
-                                    window.WindowPosX = (int)Cosmos.System.MouseManager.X - 25;
-                                    window.WindowPosY = (int)Cosmos.System.MouseManager.Y - 5;
+                                    if ((Cosmos.System.MouseManager.X + window.WindowWidth <= Shell.ScreenWidth + 25) && (Cosmos.System.MouseManager.X > 25))
+                                    {
+                                        window.WindowPosX = (int)Cosmos.System.MouseManager.X - 25;
+                                    }
+                                    else
+                                    {
+                                        /*if ((Cosmos.System.MouseManager.X + window.WindowWidth <= Shell.ScreenWidth + 25))
+                                        {
+                                            window.WindowPosX = Shell.ScreenWidth - 25;
+                                        }
+                                        else
+                                        {
+                                            window.WindowPosX = 5;
+                                        }*/
+                                    }
+                                    if ((Cosmos.System.MouseManager.Y + window.WindowHeight <= Shell.ScreenHeight) && (Cosmos.System.MouseManager.Y > 5))
+                                    {
+                                        window.WindowPosY = (int)Cosmos.System.MouseManager.Y - 5;
+                                    }
                                     Draw(canvas);
-                                    DrawStrings(canvas);
+                                    foreach (var window2 in windows)
+                                    {
+                                        DrawStrings(canvas, window2);
+                                    }
+                                    DrawString(canvas, "Graphics: " + canvas.Name(), new Pen(Color.Red), 10, Shell.ScreenHeight - 16, "OpenSans", 20f);
+                                    DrawString(canvas, "THIS GUI IS A WIP; THERE WILL BE BUGS.", new Pen(Color.Red), 10, Shell.ScreenHeight - 32, "OpenSans", 20f);
                                     canvas.DrawImageAlpha(CursorBMP, (int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y);
                                     canvas.Display();
                                     Cosmos.Core.Memory.Heap.Collect();
@@ -317,7 +339,12 @@ namespace XenOS
 
                     // Display everything
                     Draw(canvas);
-                    DrawStrings(canvas);
+                    foreach (var window in windows)
+                    {
+                        DrawStrings(canvas, window);
+                    }
+                    DrawString(canvas, "Graphics: " + canvas.Name(), new Pen(Color.Red), 10, Shell.ScreenHeight - 16, "OpenSans", 20f);
+                    DrawString(canvas, "THIS GUI IS A WIP; THERE WILL BE BUGS.", new Pen(Color.Red), 10, Shell.ScreenHeight - 32, "OpenSans", 20f);
                     canvas.Display();
                     Cosmos.Core.Memory.Heap.Collect();
 

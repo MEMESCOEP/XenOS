@@ -4,7 +4,10 @@ using System.IO;
 using IL2CPU.API.Attribs;
 using Cosmos.System.Graphics;
 using System.Threading;
-using System.Drawing;
+using LibDotNetParser.CILApi;
+using LibDotNetParser;
+using libDotNetClr;
+using DotNetClr;
 
 namespace XenOS
 {
@@ -18,9 +21,16 @@ namespace XenOS
         [ManifestResourceStream(ResourceName = "XenOS.Audio.StartupSound.wav")]
         private readonly static byte[] StartupSound;
 
+        [ManifestResourceStream(ResourceName = "XenOS.DLLs.mscorlib.dll")]
+        private readonly static byte[] mscorlib;
+
+        [ManifestResourceStream(ResourceName = "XenOS.TestApps.HelloWorld.exe")]
+        private readonly static byte[] HelloWorldExample;
+
         // Variables
         public string CWD = "0:\\";
         public bool KeepCMDOpen = true;
+        public static string PlayStartupSound = "1";
 
         // Functions
         public void CMD()
@@ -41,27 +51,98 @@ namespace XenOS
             }
             */
 
+            LoadSettings loadSettings = new LoadSettings();
+            loadSettings.Load();
+
             Console.Clear();
-            Console.WriteLine("Welcome to " + Shell.OsName + " (" + Shell.Version + ")\nType 'help' for a list of commands.");
+            Console.WriteLine("Welcome to " + Shell.OsName + "! (" + Shell.Version + ")\nType 'help' for a list of commands.");
 
             if (File.Exists(Path.Combine(CWD, "autoexec")))
             {
                 foreach (var line in File.ReadLines(Path.Combine(CWD, "autoexec")))
                 {
-                    Interpret(line);
+                    if (Console.KeyAvailable)
+                    {
+                        if(Console.ReadKey().Key == ConsoleKey.Escape)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Interpret(line);
+                    }
                 }
             }
 
-            if (Drivers.AudioEnabled)
+            if (PlayStartupSound == "1")
             {
-                AudioPlayer player = new AudioPlayer();
-                player.PlayWAVFromBytes(StartupSound);
+                if (Drivers.AudioEnabled)
+                {
+                    AudioPlayer player = new AudioPlayer();
+                    player.PlayWAVFromBytes(StartupSound);
+                }
+                else
+                {
+                    int freq = 200;
+                    for (int i = 0; i < 9; i += 1)
+                    {
+                        Console.Beep(freq, 25);
+                        freq += 100;
+                    }
+                }
+            }
+            
+            if (!File.Exists(@"0:\framework\mscorlib.dll"))
+            {
+                try
+                {
+                    if (!Directory.Exists(@"0:\framework\"))
+                    {
+                        Directory.CreateDirectory(@"0:\framework\");
+                    }
+                    File.WriteAllBytes(@"0:\framework\mscorlib.dll", mscorlib);
+                }
+                catch
+                {
+
+                }
+            }
+
+            if (!Directory.Exists(@"0:\TestApps\"))
+            {
+                try
+                {
+                    Directory.CreateDirectory(@"0:\TestApps\");
+                }
+                catch
+                {
+
+                }
+                if (!File.Exists(@"0:\TestApps\program.bin"))
+                {
+                    try
+                    {
+                        File.WriteAllBytes(@"0:\TestApps\HelloWorld.exe", HelloWorldExample);
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
             else
             {
-                for(int i = 250; i < 4; i += 250)
+                if (!File.Exists(@"0:\TestApps\HelloWorld.exe"))
                 {
-                    Console.Beep(i, 1000);
+                    try
+                    {
+                        File.WriteAllBytes(@"0:\TestApps\HelloWorld.exe", HelloWorldExample);
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
 
@@ -132,9 +213,9 @@ namespace XenOS
         public void PrintPrompt()
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(Shell.username + "#");
+            Console.Write(Shell.username + "@" + Shell.OsName);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(CWD);
+            Console.Write("[" + CWD + "]");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(" >> ");
         }
@@ -219,12 +300,16 @@ namespace XenOS
                     foreach (var dir in Directory.GetDirectories(CWD))
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("[DIR] \t" + dir);
+                        Console.Write("[DIR]\t ");
                         Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(dir);
                     }
                     foreach (var filename in Directory.GetFiles(CWD))
                     {
-                        Console.WriteLine("[FILE]\t" + filename);
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("[FILE]\t");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(filename);
                     }
                 }
                 catch
@@ -391,7 +476,17 @@ namespace XenOS
                     {
                         foreach (var line in File.ReadLines(Path.Combine(CWD, path)))
                         {
-                            Interpret(line);
+                            if (Console.KeyAvailable)
+                            {
+                                if (Console.ReadKey().Key == ConsoleKey.Escape)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Interpret(line);
+                            }
                         }
                     }
                     else
@@ -497,6 +592,7 @@ namespace XenOS
                 var path = input.Substring(6);
                 if (File.Exists(Path.Combine(CWD, path)))
                 {
+                    /*
                     AudioHelper.readWav(path, out l, out r);
                     foreach (var value in l)
                     {
@@ -507,6 +603,10 @@ namespace XenOS
                     {
                         Console.WriteLine(value.ToString());
                     }
+                    */
+
+                    AudioPlayer audioPlayer = new AudioPlayer();
+                    audioPlayer.PlayWAV(path);
                 }
                 else
                 {
@@ -701,13 +801,37 @@ namespace XenOS
                 About.ShowInfo();
             }
 
-            // APP (Execute .NET apps)
+            // (Execute .NET apps)
             else if (input.StartsWith("app "))
             {
-                var path = input.Substring(5);
+                var path = input.Substring(4);
                 if (File.Exists(path))
                 {
+                    try
+                    {
+                        /*if (!Directory.Exists(@"0:\framework\"))
+                        {
+                            throw new DirectoryNotFoundException("The DotNetParser framework wasn't found!");
+                        }
+                        */
+                        try
+                        {
+                            DotNetFile dotNetFile = new DotNetFile(path);
+                            var clr = new libDotNetClr.DotNetClr(dotNetFile, "0:\\Framework\\");
+                            clr.RegisterCustomInternalMethod("System.Console.WriteLine", WriteLine);
+                            clr.RegisterCustomInternalMethod("WriteAllText", WriteAllText);
+                            clr.RegisterCustomInternalMethod("ReadLine", ReadLine);
+                            clr.Start();
+                        }
+                        catch
+                        {
 
+                        }
+                    }
+                    catch(Exception EX)
+                    {
+                        Console.WriteLine("ERROR: " + EX.Message);
+                    } 
                 }
                 else
                 {
@@ -792,6 +916,64 @@ namespace XenOS
                 }
             }
 
+            //DSK ()
+            else if(input == "dsk")
+            {
+                foreach(var disk in DriveInfo.GetDrives())
+                {
+                    if(disk.DriveType == DriveType.CDRom)
+                    {
+                        Console.WriteLine("CD-Rom: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Removable)
+                    {
+                        Console.WriteLine("Removable Disk: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Unknown)
+                    {
+                        Console.WriteLine("Disk: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Removable)
+                    {
+                        Console.WriteLine("Removable Disk: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Ram)
+                    {
+                        Console.WriteLine("Ram Disk: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Fixed)
+                    {
+                        Console.WriteLine("Fixed Disk: " + disk.Name);
+                    }
+                    else if (disk.DriveType == DriveType.Network)
+                    {
+                        Console.WriteLine("Network Disk: " + disk.Name);
+                    }
+                    Console.WriteLine("Volume label: " + disk.VolumeLabel);
+                    Console.WriteLine("Size: " + disk.TotalSize);
+                    Console.WriteLine("Total free space: " + disk.TotalFreeSpace);
+                    Console.WriteLine("Available space: " + disk.AvailableFreeSpace);
+                    Console.WriteLine("Root directory: " + disk.RootDirectory);
+                    Console.WriteLine("Format: " + disk.DriveFormat);
+                    Console.WriteLine("Is Ready: " + disk.IsReady.ToString());
+                    Console.WriteLine();
+                }
+                /*
+                foreach (var cdrom in DriveInfo.GetDrives())
+                {
+                    Console.WriteLine("CD-ROM Drive: " + cdrom.Name);
+                    Console.WriteLine("Volume label: " + cdrom.VolumeLabel);
+                    Console.WriteLine("Size: " + cdrom.TotalSize);
+                    Console.WriteLine("Total free space: " + cdrom.TotalFreeSpace);
+                    Console.WriteLine("Available space: " + cdrom.AvailableFreeSpace);
+                    Console.WriteLine("Root directory: " + cdrom.RootDirectory);
+                    Console.WriteLine("Format: " + cdrom.DriveFormat);
+                    Console.WriteLine("Is Ready: " + cdrom.IsReady.ToString());
+                    Console.WriteLine();
+                }
+                */
+            }
+
             // EMPTY COMMAND
             else if (input == "");
 
@@ -800,6 +982,23 @@ namespace XenOS
             {
                 Console.WriteLine("Invalid command: \"" + input + "\"");
             }
+        }
+
+        public void WriteLine(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var str = (string)Stack[Stack.Length - 1].value;
+            Console.WriteLine(str);
+        }
+
+        public void ReadLine(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var prompt = Stack[Stack.Length - 1].value.ToString();
+            Console.Write(prompt);
+            returnValue = MethodArgStack.String(Console.ReadLine());
+        }
+        public void WriteAllText(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            File.WriteAllText(Stack[0].ToString(), Stack[1].ToString());
         }
     }
 }

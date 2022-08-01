@@ -46,11 +46,24 @@
       <None Remove="Audio\StartupSound.wav" />
       <None Remove="DLLs\CosmosTTF.dll" />
       <None Remove="DLLs\CosmosTTFRenderer.dll" />
+      <None Remove="DLLs\DotNetClr.dll" />
+      <None Remove="DLLs\DotNetParser.dll" />
+      <None Remove="DLLs\libcs.common.dll" />
+      <None Remove="DLLs\libcs.core.dll" />
+      <None Remove="DLLs\libcs.dll" />
+      <None Remove="DLLs\libcs.SourceGenerator.dll" />
+      <None Remove="DLLs\LibDotNetParser.dll" />
+      <None Remove="DLLs\mscorlib.dll" />
+      <None Remove="DLLs\XSharp.dll" />
       <None Remove="Fonts\DefaultFont.ttf" />
       <None Remove="Fonts\OpenSans-Regular.ttf" />
       <None Remove="Fonts\segoeuil.ttf" />
       <None Remove="Fonts\seguibl.ttf" />
       <None Remove="isoFiles\he_he_he_ha.wav" />
+      <None Remove="isoFiles\mscorlib.dll" />
+      <None Remove="TestApps\HelloWorld.exe" />
+      <None Remove="TestApps\noruntime.exe" />
+      <None Remove="TestApps\program.bin" />
     </ItemGroup>
 
     <ItemGroup>
@@ -76,10 +89,21 @@
       <EmbeddedResource Include="Audio\SampleAudio.wav" />
       <EmbeddedResource Include="Audio\StartupSound.wav" />
       <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
+      <EmbeddedResource Include="DLLs\DotNetClr.dll" />
+      <EmbeddedResource Include="DLLs\DotNetParser.dll" />
+      <EmbeddedResource Include="DLLs\libcs.common.dll" />
+      <EmbeddedResource Include="DLLs\libcs.core.dll" />
+      <EmbeddedResource Include="DLLs\libcs.dll" />
+      <EmbeddedResource Include="DLLs\libcs.SourceGenerator.dll" />
+      <EmbeddedResource Include="DLLs\LibDotNetParser.dll" />
+      <EmbeddedResource Include="DLLs\mscorlib.dll" />
+      <EmbeddedResource Include="DLLs\XSharp.dll" />
       <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
       <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
       <EmbeddedResource Include="Fonts\segoeuil.ttf" />
       <EmbeddedResource Include="isoFiles\he_he_he_ha.wav" />
+      <EmbeddedResource Include="isoFiles\mscorlib.dll" />
+      <EmbeddedResource Include="TestApps\HelloWorld.exe" />
     </ItemGroup>
 
     <ItemGroup>
@@ -87,11 +111,40 @@
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="CosmosFtpServer" Version="1.0.1" />
+        <PackageReference Include="DotNetParser" Version="0.5.9" />
+        <PackageReference Include="ELFSharp" Version="2.15.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="CosmosTTF">
         <HintPath>DLLs\CosmosTTFRenderer.dll</HintPath>
+      </Reference>
+      <Reference Include="DotNetClr">
+        <HintPath>DLLs\DotNetClr.dll</HintPath>
+      </Reference>
+      <Reference Include="DotNetParser">
+        <HintPath>DLLs\DotNetParser.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs">
+        <HintPath>DLLs\libcs.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.common">
+        <HintPath>DLLs\libcs.common.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.core">
+        <HintPath>DLLs\libcs.core.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.SourceGenerator">
+        <HintPath>DLLs\libcs.SourceGenerator.dll</HintPath>
+      </Reference>
+      <Reference Include="LibDotNetParser">
+        <HintPath>DLLs\LibDotNetParser.dll</HintPath>
+      </Reference>
+      <Reference Include="PeNet">
+        <HintPath>DLLs\PeNet.dll</HintPath>
+      </Reference>
+      <Reference Include="XSharp">
+        <HintPath>DLLs\XSharp.dll</HintPath>
       </Reference>
     </ItemGroup>
 

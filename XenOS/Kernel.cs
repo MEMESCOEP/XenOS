@@ -8,7 +8,10 @@ namespace XenOS
 {
     public class Kernel : Sys.Kernel
     {
+        // Variables
+        public static string KernelVersion = "6.9";
 
+        // Functions
         protected override void BeforeRun()
         {
             //Console.SetWindowSize(80, 25);
@@ -34,12 +37,15 @@ namespace XenOS
 
         public static void KernelPanic(string exception, string msg)
         {
+            Kernel kernel = new Kernel();
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Red;
             Console.Clear();
             Console.WriteLine("[================================ KERNEL PANIC ================================]");
-            Console.WriteLine("EXCEPTION: " + exception + "\n" + "MESSAGE: " + msg + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            Console.WriteLine(Shell.OsName + " encountered an unrecoverable error!");
+            Console.WriteLine("EXCEPTION: " + exception + "\n" + "MESSAGE: " + msg + "\nLast Known Address: " + Cosmos.Core.GCImplementation.GetSafePointer(Kernel.ReferenceEquals) + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             Console.CursorVisible = false;
+            Console.Write("System will attempt to reboot...\r");
             Console.Beep(1000, 500);
             Console.Beep(750, 500);
             while (true)

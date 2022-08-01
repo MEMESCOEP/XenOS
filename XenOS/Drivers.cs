@@ -24,6 +24,7 @@ namespace XenOS
         // Functions
         public void Audio()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[INFO -> DRIVERS:Audio] >> Initializing audio driver...");
 
             try
@@ -31,13 +32,17 @@ namespace XenOS
                 driver = AC97.Initialize(4096);
                 mixer = new AudioMixer();
                 AudioEnabled = true;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[INFO -> DRIVERS:Audio] >> Audio driver initialized.");
             }
             catch (InvalidOperationException)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> DRIVERS:Audio] >> No AC97 device found.");
             }
             catch(Exception EX)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> DRIVERS:Audio] >> " + EX.Message);
             }
         }
@@ -46,13 +51,21 @@ namespace XenOS
         {
             try
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("[INFO -> Drivers:Filesystem] >> Initializing virtual filesystem...");
                 vfs = new Cosmos.System.FileSystem.CosmosVFS();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[INFO -> DRIVERS:Filesystem] >> Virtual filesystem initialized.");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("[INFO -> Drivers:Filesystem] >> Registering virtual filesystem...");
                 Cosmos.System.FileSystem.VFS.VFSManager.RegisterVFS(vfs);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[INFO -> DRIVERS:Filesystem] >> Virtual filesystem registered.");
             }
             catch(Exception EX)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> Drivers:Filesystem] >> " + EX.Message);
             }
         }
@@ -76,6 +89,7 @@ namespace XenOS
         {
             try
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("[INFO -> Drivers:NET] >> Attempting DHCP autoconfig...");
                 try
                 {
@@ -88,17 +102,20 @@ namespace XenOS
                     xClient.SendDiscoverPacket();
                     var ip = NetworkConfiguration.CurrentNetworkConfig.IPConfig.IPAddress;
                     xClient.Close();
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("[INFO -> Network:DHCP] >> Etablished Network connection via DHCP.\nIPv4 Address: " + ip, 2);
                     Thread.Sleep(1000);
                 }
                 catch (Exception ex)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[INFO -> Network:DHCP] >> DHCP Discover failed.\nDetails: " + ex.Message);
                     Thread.Sleep(1000);
                 }
             }
             catch (Exception EX)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> Drivers:NET] >> " + EX.Message);
             }
         }

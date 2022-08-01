@@ -1,5 +1,5 @@
 # XenOS
-XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# and is made possible by the Cosmos OS project.
+XenOS is an operating system written in .NET C# and is made possible by the Cosmos OS project.
 <br/>
 ## Features
 * Simple File I/O
@@ -11,10 +11,11 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 * FTP Server
 * PS/2 Keyboard and mouse support
 * AC97 Audio Driver
+* Basic .NET executable support
 
 ## Screenshots
-<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Screenshots/GUI.png" />
-<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Screenshots/Console.png" />
+<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/GUI.png" />
+<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/Console.png" />
 
 ## System Requirements
 * An x86 CPU
@@ -32,11 +33,11 @@ XenOS is a re-write of PogisOS. XenOS is an operating system written in .NET C# 
 * Added ability to change username
 * Added time command
 * Added about command
+* Added .NET executable support
 
 ## TO-DO
 * Add USB Support
 * Add NTFS / EXT Filesystem support
-* Add .NET executable support
 * Fix bugs lol
 * Add a notepad to the GUI
 * Add Sound Blaster 16 Audio Driver
@@ -83,5 +84,6 @@ Starting the build:
 27. ping {IP address} - ping an IP address
 28. gui - starts the gui
 29. modes - displays all supported resolutions
+30. app - executes a .NET application
   
 Please note that this Readme is still being edited.

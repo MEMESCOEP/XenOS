@@ -65,6 +65,14 @@
             "CosmosFtpServer": {
               "target": "Package",
               "version": "[1.0.1, )"
+            },
+            "DotNetParser": {
+              "target": "Package",
+              "version": "[0.5.9, )"
+            },
+            "ELFSharp": {
+              "target": "Package",
+              "version": "[2.15.0, )"
             }
           },
           "imports": [
