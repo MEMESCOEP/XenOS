@@ -85,6 +85,6 @@ Starting the build:
 27. ping {IP address} - ping an IP address
 28. gui - starts the gui
 29. modes - displays all supported resolutions
-30. app - executes a .NET application
+30. app {application path} - executes a .NET application
   
 Please note that this Readme is still being edited.
