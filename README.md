@@ -2,8 +2,8 @@
 XenOS is an operating system written in .NET C# and is made possible by the Cosmos OS project.
 <br/>
 ## Features
-* Simple File I/O
-* Fat32 Filesystem
+* Simple File I/O (Currently supports vmware only)
+* Fat32 Filesystem (Currently supports vmware only)
 * Simple GUI
 * Text Editor
 * Autoexec (Auto start on boot)
@@ -12,6 +12,7 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * PS/2 Keyboard and mouse support
 * AC97 Audio Driver
 * Basic .NET executable support
+* Settings file
 
 ## Screenshots
 <img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/GUI.png" />
