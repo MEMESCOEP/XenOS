@@ -9,6 +9,14 @@ namespace XenOS
 {
     internal class Helpers
     {
+        public static void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor);
+        }
+
         public static string GetLine(string fileName, int line)
         {
             using (var sr = new StreamReader(fileName))

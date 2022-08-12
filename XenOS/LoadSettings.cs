@@ -13,23 +13,23 @@ namespace XenOS
 
         public void Load()
         {
-            if (File.Exists("0:\\settings"))
+            if (File.Exists("0:\\SETTINGS\\settings"))
             {
                 try
                 {
-                    if (Helpers.GetLine("0:\\settings", 1) != "$Default")
+                    if (Helpers.GetLine("0:\\SETTINGS\\settings", 1) != "$Default")
                     {
-                        Shell.OsName = Helpers.GetLine("0:\\settings", 1);
+                        Shell.OsName = Helpers.GetLine("0:\\SETTINGS\\settings", 1);
                     }
 
-                    if (Helpers.GetLine("0:\\settings", 2) != "$Default")
+                    if (Helpers.GetLine("0:\\SETTINGS\\settings", 2) != "$Default")
                     {
-                        Shell.Version = Helpers.GetLine("0:\\settings", 2);
+                        Shell.Version = Helpers.GetLine("0:\\SETTINGS\\settings", 2);
                     }
 
-                    if (Helpers.GetLine("0:\\settings", 3) != "$Default")
+                    if (Helpers.GetLine("0:\\SETTINGS\\settings", 3) != "$Default")
                     {
-                        CustomConsole.PlayStartupSound = Helpers.GetLine("0:\\settings", 3);
+                        CustomConsole.PlayStartupSound = Helpers.GetLine("0:\\SETTINGS\\settings", 3);
                     }
                 }
                 catch(Exception ex)

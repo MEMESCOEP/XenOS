@@ -50,3 +50,5 @@ D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\libcs.SourceGenerator.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\XSharp.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\DotNetClr.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\DotNetParser.dll
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.Properties.Resources.resources
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.GenerateResource.cache

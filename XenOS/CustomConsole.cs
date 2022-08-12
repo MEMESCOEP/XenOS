@@ -6,8 +6,7 @@ using Cosmos.System.Graphics;
 using System.Threading;
 using LibDotNetParser.CILApi;
 using LibDotNetParser;
-using libDotNetClr;
-using DotNetClr;
+using System.Linq;
 
 namespace XenOS
 {
@@ -36,20 +35,12 @@ namespace XenOS
         public void CMD()
         {
             Console.WriteLine("[INFO -> Console] >> Console loaded.");
-            /*
-            Console.WriteLine("[INFO -> Console] >> Writing test audio file...");
-            if (!File.Exists("0:\\test.wav"))
-            {
-                try
-                {
-                    File.WriteAllBytes("0:\\test.wav", StartupSound);
-                }
-                catch
-                {
 
-                }
+            if (File.Exists(Path.Combine("0:\\SETTINGS", "login")))
+            {
+                Login login = new Login();
+                login.SystemLogin();
             }
-            */
 
             LoadSettings loadSettings = new LoadSettings();
             loadSettings.Load();
@@ -57,9 +48,9 @@ namespace XenOS
             Console.Clear();
             Console.WriteLine("Welcome to " + Shell.OsName + "! (" + Shell.Version + ")\nType 'help' for a list of commands.");
 
-            if (File.Exists(Path.Combine(CWD, "autoexec")))
+            if (File.Exists(Path.Combine("0:\\", "autoexec")))
             {
-                foreach (var line in File.ReadLines(Path.Combine(CWD, "autoexec")))
+                foreach (var line in File.ReadLines(Path.Combine("0:\\", "autoexec")))
                 {
                     if (Console.KeyAvailable)
                     {
@@ -155,11 +146,11 @@ namespace XenOS
                 CWD = "NoFS";
             }
 
-            if (CWD != "NoFS" && File.Exists("0:\\username"))
+            /*if (CWD != "NoFS" && File.Exists("0:\\SETTINGS\\username"))
             {
-                var uname = File.ReadAllText("0:\\username");
+                var uname = File.ReadAllText("0:\\SETTINGS\\username");
                 Shell.username = uname;
-            }
+            }*/
 
             PrintPrompt();
             string input = "";
@@ -168,45 +159,6 @@ namespace XenOS
                 input = Console.ReadLine();
                 Interpret(input);
                 PrintPrompt();
-                /*if (Console.KeyAvailable)
-                {
-                    var key = Console.ReadKey();
-                    if (key.Key == ConsoleKey.Enter)
-                    {
-                        Console.WriteLine();
-                        Interpret(input);
-                        PrintPrompt();
-                        input = "";
-                    }
-                    else if(key.Key != ConsoleKey.LeftArrow && key.Key != ConsoleKey.RightArrow && key.Key != ConsoleKey.DownArrow && key.Key != ConsoleKey.UpArrow)
-                    {
-                        if(key.Key == ConsoleKey.Backspace)
-                        {
-                            if(input.Length > 0)
-                            {
-                                //var cursorPos2 = Console.GetCursorPosition();
-                                input.TrimEnd(input[input.Length - 2]);
-                                Console.Write("\r");
-                                PrintPrompt();
-                                Console.Write(input + " ");
-                                //Console.SetCursorPosition(cursorPos2.Left, cursorPos2.Top);
-                            }
-                        }
-                        else if(key.KeyChar != null)
-                        {
-                            input += key.KeyChar;
-                        }
-                    }
-                }
-                var cursorPos = Console.GetCursorPosition();
-                Console.SetCursorPosition(0, 0);
-                Console.BackgroundColor = ConsoleColor.Cyan;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.WriteLine("[======================================]");
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetCursorPosition(cursorPos.Left, cursorPos.Top);
-                */
             }
         }
 
@@ -801,41 +753,45 @@ namespace XenOS
                 About.ShowInfo();
             }
 
-            // (Execute .NET apps)
+            // APP (Execute .NET apps)
             else if (input.StartsWith("app "))
             {
                 var path = input.Substring(4);
                 if (File.Exists(path))
                 {
+                    path = Path.GetFullPath(input.Substring(4));
                     try
                     {
-                        /*if (!Directory.Exists(@"0:\framework\"))
+                        if (!Directory.Exists(@"0:\framework\"))
                         {
                             throw new DirectoryNotFoundException("The DotNetParser framework wasn't found!");
                         }
-                        */
                         try
                         {
                             DotNetFile dotNetFile = new DotNetFile(path);
                             var clr = new libDotNetClr.DotNetClr(dotNetFile, "0:\\Framework\\");
                             clr.RegisterCustomInternalMethod("System.Console.WriteLine", WriteLine);
                             clr.RegisterCustomInternalMethod("WriteAllText", WriteAllText);
+                            clr.RegisterCustomInternalMethod("ReadAllText", ReadAllText);
                             clr.RegisterCustomInternalMethod("ReadLine", ReadLine);
+                            clr.RegisterCustomInternalMethod("ReadKey", ReadKey);
+                            clr.RegisterCustomInternalMethod("DeleteFile", DeleteFile);
+                            clr.RegisterCustomInternalMethod("CreateFile", CreateFile);
                             clr.Start();
                         }
-                        catch
+                        catch (Exception EX)
                         {
-
+                            Console.WriteLine("ERROR: " + EX.Message);
                         }
                     }
-                    catch(Exception EX)
+                    catch (Exception EX)
                     {
                         Console.WriteLine("ERROR: " + EX.Message);
-                    } 
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("File " + path + " doesn't exist!");
+                    Console.WriteLine("File \"" + path + "\" doesn't exist!");
                 }
             }
 
@@ -853,7 +809,7 @@ namespace XenOS
                         filedata += txt;
                         File.WriteAllText(path, filedata);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine("ERROR: " + ex.Message);
                     }
@@ -887,26 +843,31 @@ namespace XenOS
                 }
             }
 
+            /*
             // UNAME (Change the username)
             else if (input.StartsWith("uname "))
             {
                 var txt = input.Substring(6);
-                if(CWD != "NoFS")
+                if (CWD != "NoFS")
                 {
-                    if (File.Exists("0:\\username"))
+                    if (!Directory.Exists("0:\\SETTINGS\\"))
                     {
-                        File.WriteAllText("0:\\username", txt);
+                        Directory.CreateDirectory("0:\\SETTINGS\\");
+                    }
+                    if (File.Exists("0:\\SETTINGS\\username"))
+                    {
+                        File.WriteAllText("0:\\SETTINGS\\username", txt);
                     }
                     else
                     {
-                        File.CreateText("0:\\username");
-                        File.WriteAllText("0:\\username", txt);
+                        File.CreateText("0:\\SETTINGS\\username");
+                        File.WriteAllText("0:\\SETTINGS\\username", txt);
                     }
                 }
 
-                if (CWD != "NoFS" && File.Exists("0:\\username"))
+                if (CWD != "NoFS" && File.Exists("0:\\SETTINGS\\username"))
                 {
-                    var uname = File.ReadAllText("0:\\username");
+                    var uname = File.ReadAllText("0:\\SETTINGS\\username");
                     Shell.username = uname;
                 }
                 else
@@ -915,13 +876,14 @@ namespace XenOS
                     Shell.username = txt;
                 }
             }
+            */
 
             //DSK ()
-            else if(input == "dsk")
+            else if (input == "dsk")
             {
-                foreach(var disk in DriveInfo.GetDrives())
+                foreach (var disk in DriveInfo.GetDrives())
                 {
-                    if(disk.DriveType == DriveType.CDRom)
+                    if (disk.DriveType == DriveType.CDRom)
                     {
                         Console.WriteLine("CD-Rom: " + disk.Name);
                     }
@@ -958,20 +920,175 @@ namespace XenOS
                     Console.WriteLine("Is Ready: " + disk.IsReady.ToString());
                     Console.WriteLine();
                 }
-                /*
-                foreach (var cdrom in DriveInfo.GetDrives())
+            }
+
+            // LOCK (Lock the screen)
+            else if (input.StartsWith("lock "))
+            {
+                var pswd = input.Substring(5);
+                LockScreen lockScreen = new LockScreen();
+                lockScreen.Lock(pswd);
+            }
+
+            // LOGOUT (Log out of the computer
+            else if(input == "logout")
+            {
+                CMD();
+            }
+
+            // AMOGUS
+            else if (input == "amogus")
+            {
+                Console.WriteLine(@"S U S S Y  B A K A !!  ! !  !  !  !  !");
+            }
+
+            // LOGINPASS (Change the login password)
+            else if (input.StartsWith("loginpass "))
+            {
+                var pswd = input.Substring(10);
+                if (pswd != "-r")
                 {
-                    Console.WriteLine("CD-ROM Drive: " + cdrom.Name);
-                    Console.WriteLine("Volume label: " + cdrom.VolumeLabel);
-                    Console.WriteLine("Size: " + cdrom.TotalSize);
-                    Console.WriteLine("Total free space: " + cdrom.TotalFreeSpace);
-                    Console.WriteLine("Available space: " + cdrom.AvailableFreeSpace);
-                    Console.WriteLine("Root directory: " + cdrom.RootDirectory);
-                    Console.WriteLine("Format: " + cdrom.DriveFormat);
-                    Console.WriteLine("Is Ready: " + cdrom.IsReady.ToString());
-                    Console.WriteLine();
+                    if (!File.Exists("0:\\SETTINGS\\login"))
+                    {
+                        File.CreateText("0:\\SETTINGS\\login");
+                    }
+                    File.WriteAllText("0:\\SETTINGS\\login", pswd);
+                    Console.WriteLine("Login password was changed to: " + pswd);
                 }
-                */
+                else
+                {
+                    if (File.Exists("0:\\SETTINGS\\login"))
+                    {
+                        File.Delete("0:\\SETTINGS\\login");
+                    }
+                    Console.WriteLine("Login password disabled.");
+                }
+            }
+
+            // ADDUSER (Add a user to the userlist)
+            else if(input == "adduser")
+            {
+                var unames = File.ReadAllText("0:\\SETTINGS\\users");
+                var pswds = File.ReadAllText("0:\\SETTINGS\\login");
+
+                Console.Write("Enter a new username >> ");
+                var Username = Console.ReadLine();
+
+                if (unames.Contains(Username))
+                {
+                    Console.WriteLine("User already exists!\n");
+                    return;
+                }
+
+                Console.Write("Enter a password >> ");
+                var Password = Console.ReadLine();
+
+                unames += ("\n" + Username);
+                pswds += ("\n" + Password);
+
+                File.WriteAllText("0:\\SETTINGS\\users", unames);
+                File.WriteAllText("0:\\SETTINGS\\login", pswds);
+            }
+
+            // RMUSER (Remove a user from the userlist)
+            else if (input == "rmuser")
+            {
+                Console.Write("Enter username >> ");
+                var Username = Console.ReadLine();
+
+                var unames = File.ReadAllLines("0:\\SETTINGS\\users");
+                var pswds = File.ReadAllLines("0:\\SETTINGS\\login");
+
+                if (!unames.Contains(Username))
+                {
+                    Console.WriteLine("User doesn't exist!\n");
+                    return;
+                }
+
+                foreach (var u in unames)
+                {
+                    if (u == Username)
+                    {
+                        int UnameIndex = 0;
+                        int count = 0;
+                        var passdata = String.Empty;
+                        var namedata = String.Empty;
+                        foreach (var un in unames)
+                        {
+                            if (un == Username)
+                            {
+                                UnameIndex = count;
+                            }
+                            else
+                            {
+                                if (un != String.Empty)
+                                {
+                                    namedata += un + "\n";
+                                    passdata += pswds[count] + "\n";
+                                }
+                            }
+
+                            count++;
+                        }
+
+                        File.WriteAllText("0:\\SETTINGS\\users", namedata);
+                        File.WriteAllText("0:\\SETTINGS\\login", passdata);
+                        break;
+                    }
+                }
+            }
+
+            // CHGPSWD (Change a user's password)
+            else if (input == "chgpswd")
+            {
+                var unames = File.ReadAllLines("0:\\SETTINGS\\users");
+                var pswds = File.ReadAllLines("0:\\SETTINGS\\login");
+
+                Console.Write("Enter username >> ");
+                var Username = Console.ReadLine();
+
+                if (!unames.Contains(Username))
+                {
+                    Console.WriteLine("Invalid username!\n");
+                    return;
+                }
+
+                Console.Write("Enter current password for {0} >> ", Username);
+                var Password = Console.ReadLine();
+
+                int UnameIndex = 0;
+                int count = 0;
+                var passdata = String.Empty;
+                foreach (var un in unames)
+                {
+                    if (un == Username)
+                    {
+                        if (pswds[count] == Password)
+                        {
+                            Console.Write("Enter new password for {0} >> ", Username);
+                            var NewPassword = Console.ReadLine();
+                            passdata += NewPassword + "\n";
+                        }
+                    }
+                    else
+                    {
+                        if (pswds[count] != String.Empty)
+                        {
+                            passdata += pswds[count] + "\n";
+                        }
+                    }
+
+                    count++;
+                }
+
+                File.WriteAllText("0:\\SETTINGS\\login", "\n" + passdata);
+            }
+
+            // GAMES (Start playing games)
+            else if(input == "games")
+            {
+                Games games = new Games();
+                games.SelectGame();
             }
 
             // EMPTY COMMAND
@@ -980,7 +1097,9 @@ namespace XenOS
             // BAD COMMAND
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid command: \"" + input + "\"");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
@@ -996,9 +1115,39 @@ namespace XenOS
             Console.Write(prompt);
             returnValue = MethodArgStack.String(Console.ReadLine());
         }
+
+        public void ReadKey(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var prompt = Stack[Stack.Length - 1].value.ToString();
+            Console.Write(prompt);
+            returnValue = MethodArgStack.String(Console.ReadKey().KeyChar.ToString());
+        }
+
+        public void ReadAllText(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var path = Stack[Stack.Length - 1].value.ToString();
+            returnValue = MethodArgStack.String(File.ReadAllText(path));
+        }
+
         public void WriteAllText(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
         {
             File.WriteAllText(Stack[0].ToString(), Stack[1].ToString());
+        }
+
+        public void DeleteFile(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            File.Delete(Stack[0].ToString());
+        }
+
+        public void CreateFile(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            File.Create(Stack[0].ToString());
+        }
+
+        public void Write(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var str = (string)Stack[Stack.Length - 1].value;
+            Console.Write(str);
         }
     }
 }

@@ -11,7 +11,11 @@ namespace XenOS
             Console.Write("\n[PRESS ANY KEY TO CONTINUE]");
             Console.ReadKey(true);
             Console.Clear();
-            Console.WriteLine("[== SYSTEM ==]\n4. panic\n5. echo <text>\n6. timeout <ms>\n7. time\n8. about\n9. audio <filename>\n10. testaudio\n11. uname <username>\n12. app <file name>\n\n[== CONSOLE ==]\n1. beep <frequency>\n\n[== NETWORK ==]\n1. ipaddr\n2. urltoip <url>\n3. ftpserver\n4. ping <ip address>\n\n[== GRAPHICS ==]\n1. gui\n2. modes");
+            Console.WriteLine("[== SYSTEM ==]\n4. panic\n5. echo <text>\n6. timeout <ms>\n7. time\n8. about\n9. audio <filename>\n10. testaudio\n11. app <file name>\n\n[== CONSOLE ==]\n1. beep <frequency>\n2. logout\n3. adduser\n4. rmuser\n5. chgpswd\n\n[== NETWORK ==]\n1. ipaddr\n2. urltoip <url>\n3. ftpserver\n4. ping <ip address>\n\n");
+            Console.Write("[PRESS ANY KEY TO CONTINUE]");
+            Console.ReadKey(true);
+            Console.Clear();
+            Console.WriteLine("[== GRAPHICS ==]\n1. gui\n2. modes");
             Console.WriteLine();
         }
     }

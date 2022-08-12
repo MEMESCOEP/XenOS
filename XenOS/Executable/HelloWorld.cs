@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace HelloWorldTest
 {
@@ -16,8 +17,9 @@ namespace HelloWorldTest
         static void Main(string[] args)
         {
             WriteLine("Hello World!");
-            var Data = ReadLine("Type something: ");
-            WriteLine(Data);
+            Console.Write("Type something: ");
+            var Data = Console.ReadLine();
+            WriteLine("You typed: " + Data);
         }
     }
 }

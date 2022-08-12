@@ -8,7 +8,7 @@ namespace XenOS
         public static API auraApi;
         public static string username = "root";
         public static string OsName = "XenOS";
-        public static string Version = "Alpha 073122_845P";
+        public static string Version = "Alpha 081222_710P";
         public static string Logo = @"|\  \  /  /|\  ___ \ |\   ___  \|\   __  \|\   ____\     
 \ \  \/  / | \   __/|\ \  \\ \  \ \  \|\  \ \  \___|_    
  \ \    / / \ \  \_|/_\ \  \\ \  \ \  \\\  \ \_____  \   
@@ -18,13 +18,14 @@ namespace XenOS
 |__|/ \|__|                                  \|_________|";
         public static int ScreenWidth = 800;
         public static int ScreenHeight = 600;
+        public static ConsoleColor TextColor = ConsoleColor.White;
 
         // Functions
         public void init()
         {
             Console.WriteLine("[INFO -> Shell] >> Shell loaded.");
             DriverSetup();
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = Shell.TextColor;
             Console.WriteLine("[INFO -> Shell] >> Loading console...");
             CustomConsole customConsole = new CustomConsole();
             customConsole.CMD();

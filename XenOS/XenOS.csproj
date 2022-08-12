@@ -40,6 +40,7 @@
       <None Remove="Art\Icons\xp_pencil.bmp" />
       <None Remove="Art\Wallpapers\BG.bmp" />
       <None Remove="Art\Wallpapers\dream_places.bmp" />
+      <None Remove="Audio\amogus.wav" />
       <None Remove="Audio\he_he_he_ha.wav" />
       <None Remove="Audio\out_of_gum_x.wav" />
       <None Remove="Audio\SampleAudio.wav" />
@@ -84,9 +85,7 @@
       <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
-      <EmbeddedResource Include="Audio\he_he_he_ha.wav" />
-      <EmbeddedResource Include="Audio\out_of_gum_x.wav" />
-      <EmbeddedResource Include="Audio\SampleAudio.wav" />
+      <EmbeddedResource Include="Audio\amogus.wav" />
       <EmbeddedResource Include="Audio\StartupSound.wav" />
       <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
       <EmbeddedResource Include="DLLs\DotNetClr.dll" />
@@ -146,6 +145,21 @@
       <Reference Include="XSharp">
         <HintPath>DLLs\XSharp.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

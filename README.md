@@ -12,6 +12,7 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * PS/2 Keyboard and mouse support
 * AC97 Audio Driver
 * Basic .NET executable support
+* Basic login system
 
 ## Screenshots
 <img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/GUI.png" />
@@ -34,6 +35,9 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * Added time command
 * Added about command
 * Added .NET executable support
+* Added login system
+* Added user management system
+* Added basic File IO to the .NET executable
 
 ## TO-DO
 * Add USB Support
@@ -41,6 +45,7 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * Fix bugs lol
 * Add a notepad to the GUI
 * Add Sound Blaster 16 Audio Driver
+* Add more features to .NET executable support
 
 ## Building XenOS
 Prerequisites:
@@ -76,14 +81,16 @@ Starting the build:
 19. about - display OS information
 20. audio {file name} - plays a wav audio file
 21. testaudio - tests the audio
-22. uname {username} - changes the current username
-23. beep {frequency} - makes the PC Speaker beep at the specified frequency (37 Hz to 32767 Hz)
-24. ipaddr - show the current IP address
-25. urltoip {url} - converts an HTTP url to an IP address
-26. ftpserver - starts the ftp server
-27. ping {IP address} - ping an IP address
-28. gui - starts the gui
-29. modes - displays all supported resolutions
-30. app - executes a .NET application
+22. beep {frequency} - makes the PC Speaker beep at the specified frequency (37 Hz to 32767 Hz)
+23. ipaddr - show the current IP address
+24. urltoip {url} - converts an HTTP url to an IP address
+25. ftpserver - starts the ftp server
+26. ping {IP address} - ping an IP address
+27. gui - starts the gui
+28. modes - displays all supported resolutions
+29. app - executes a .NET application
+30. adduser - add a user the the login system
+31. rmuser - remove a user from the login system
+32. chgpswd - change a user's login password
   
 Please note that this Readme is still being edited.
