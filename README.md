@@ -12,11 +12,8 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * PS/2 Keyboard and mouse support
 * AC97 Audio Driver
 * Basic .NET executable support
-<<<<<<< HEAD
 * Basic login system
-=======
 * Settings file
->>>>>>> 5f0b2e91809a2d0e436bc8750cba887b424bf8a4
 
 ## Screenshots
 <img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/GUI.png" />
@@ -85,7 +82,6 @@ Starting the build:
 19. about - display OS information
 20. audio {file name} - plays a wav audio file
 21. testaudio - tests the audio
-<<<<<<< HEAD
 22. beep {frequency} - makes the PC Speaker beep at the specified frequency (37 Hz to 32767 Hz)
 23. ipaddr - show the current IP address
 24. urltoip {url} - converts an HTTP url to an IP address
@@ -97,16 +93,5 @@ Starting the build:
 30. adduser - add a user the the login system
 31. rmuser - remove a user from the login system
 32. chgpswd - change a user's login password
-=======
-22. uname {username} - changes the current username
-23. beep {frequency} - makes the PC Speaker beep at the specified frequency (37 Hz to 32767 Hz)
-24. ipaddr - show the current IP address
-25. urltoip {url} - converts an HTTP url to an IP address
-26. ftpserver - starts the ftp server
-27. ping {IP address} - ping an IP address
-28. gui - starts the gui
-29. modes - displays all supported resolutions
-30. app {application path} - executes a .NET application
->>>>>>> 5f0b2e91809a2d0e436bc8750cba887b424bf8a4
   
 Please note that this Readme is still being edited.
