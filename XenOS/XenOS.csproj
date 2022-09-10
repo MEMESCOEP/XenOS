@@ -20,10 +20,11 @@
         <CompileVBEMultiboot>False</CompileVBEMultiboot>
         <DebugEnabled>False</DebugEnabled>
         <VMWareEdition>Player</VMWareEdition>
-        <VBEResolution>640x480x32</VBEResolution>
+        <VBEResolution>1024x768x32</VBEResolution>
         <BinFormat>Elf</BinFormat>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CompressionType>Gzip</CompressionType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -39,11 +40,15 @@
       <None Remove="Art\Icons\xp_move.bmp" />
       <None Remove="Art\Icons\xp_pencil.bmp" />
       <None Remove="Art\Wallpapers\BG.bmp" />
+      <None Remove="Art\Wallpapers\BG_1024x768.bmp" />
+      <None Remove="Art\Wallpapers\BG_1360x768.bmp" />
       <None Remove="Art\Wallpapers\dream_places.bmp" />
+      <None Remove="Assets\Default.btf" />
       <None Remove="Audio\amogus.wav" />
       <None Remove="Audio\he_he_he_ha.wav" />
       <None Remove="Audio\out_of_gum_x.wav" />
       <None Remove="Audio\SampleAudio.wav" />
+      <None Remove="Audio\ShutdownSound.wav" />
       <None Remove="Audio\StartupSound.wav" />
       <None Remove="DLLs\CosmosTTF.dll" />
       <None Remove="DLLs\CosmosTTFRenderer.dll" />
@@ -60,8 +65,6 @@
       <None Remove="Fonts\OpenSans-Regular.ttf" />
       <None Remove="Fonts\segoeuil.ttf" />
       <None Remove="Fonts\seguibl.ttf" />
-      <None Remove="isoFiles\he_he_he_ha.wav" />
-      <None Remove="isoFiles\mscorlib.dll" />
       <None Remove="TestApps\HelloWorld.exe" />
       <None Remove="TestApps\noruntime.exe" />
       <None Remove="TestApps\program.bin" />
@@ -84,8 +87,12 @@
       <EmbeddedResource Include="Art\Icons\xp_move.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG_1024x768.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG_1360x768.bmp" />
       <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
+      <EmbeddedResource Include="Assets\Default.btf" />
       <EmbeddedResource Include="Audio\amogus.wav" />
+      <EmbeddedResource Include="Audio\ShutdownSound.wav" />
       <EmbeddedResource Include="Audio\StartupSound.wav" />
       <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
       <EmbeddedResource Include="DLLs\DotNetClr.dll" />
@@ -100,8 +107,6 @@
       <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
       <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
       <EmbeddedResource Include="Fonts\segoeuil.ttf" />
-      <EmbeddedResource Include="isoFiles\he_he_he_ha.wav" />
-      <EmbeddedResource Include="isoFiles\mscorlib.dll" />
       <EmbeddedResource Include="TestApps\HelloWorld.exe" />
     </ItemGroup>
 
@@ -160,6 +165,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="isoFiles\" />
     </ItemGroup>
 
 </Project>

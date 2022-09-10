@@ -30,14 +30,14 @@ namespace XenOS
             return;
             CustomConsole console = new CustomConsole();
             GUI gui = new GUI();
-            gui.MakeWindow(320, 240, 400, 100, Color.Gray, Color.Black, Color.Black, "Console", 2);
+            //gui.MakeWindow(320, 240, 400, 100, Color.Gray, Color.Black, Color.Black, "Console", 2);
             if(GUI.windows.Count > 0)
             {
                 foreach(var window in GUI.windows)
                 {
                     if(window.WindowID == 2)
                     {
-                        gui.DrawString(canvas, CharArrayToString(command), new Pen(textColor), window.WindowPosX + 10, window.WindowPosX + 60, "OpenSans", 16f);
+                        //gui.DrawString(canvas, CharArrayToString(command), new Pen(textColor), window.WindowPosX + 10, window.WindowPosX + 60, "OpenSans", 16f);
                     }
                 }
             }

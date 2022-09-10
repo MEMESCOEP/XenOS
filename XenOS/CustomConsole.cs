@@ -7,6 +7,7 @@ using System.Threading;
 using LibDotNetParser.CILApi;
 using LibDotNetParser;
 using System.Linq;
+using Cosmos.Core.IOGroup;
 
 namespace XenOS
 {
@@ -46,7 +47,8 @@ namespace XenOS
             loadSettings.Load();
 
             Console.Clear();
-            Console.WriteLine("Welcome to " + Shell.OsName + "! (" + Shell.Version + ")\nType 'help' for a list of commands.");
+            Console.WriteLine(Shell.Logo);
+            Console.WriteLine("\nWelcome to " + Shell.OsName + "! (" + Shell.Version + ")\nType 'help' for a list of commands.");
 
             if (File.Exists(Path.Combine("0:\\", "autoexec")))
             {
@@ -54,7 +56,8 @@ namespace XenOS
                 {
                     if (Console.KeyAvailable)
                     {
-                        if(Console.ReadKey().Key == ConsoleKey.Escape)
+                        var ck = Console.ReadKey();
+                        if (ck.Key == ConsoleKey.Escape)
                         {
                             break;
                         }
@@ -75,12 +78,29 @@ namespace XenOS
                 }
                 else
                 {
-                    int freq = 200;
-                    for (int i = 0; i < 9; i += 1)
+                    foreach(var device in Cosmos.HAL.PCI.Devices)
                     {
-                        Console.Beep(freq, 25);
-                        freq += 100;
-                    }
+                        if(device.VendorID == 5549 || device.VendorID == 8384 || device.VendorID == 32902 || device.VendorID == 4203 || device.VendorID == 4660)
+                        {
+                            try
+                            {
+                                int freq = 200;
+                                for (int i = 0; i < 9; i += 1)
+                                {
+                                    //Cosmos.HAL.PCSpeaker.Beep((uint)freq, 25);
+                                    for (int w = 0; w < 999999; w++) ;
+                                    freq += 100;
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                            GUI gui = new GUI();
+                            gui.INIT();
+                            break;
+                        }
+                    }                    
                 }
             }
             
@@ -177,6 +197,8 @@ namespace XenOS
             // SHUTDOWN
             if (input == "shutdown")
             {
+                Drivers drivers = new Drivers();
+                drivers.shutdown();
                 KeepCMDOpen = false;
                 Power power = new Power();
                 power.shutdown();
@@ -186,6 +208,8 @@ namespace XenOS
             // REBOOT
             else if (input == "reboot")
             {
+                Drivers drivers = new Drivers();
+                drivers.shutdown();
                 Power power = new Power();
                 power.reboot();
                 Kernel.KernelPanic("Reboot Failed!", "Unknown Exception");
@@ -885,39 +909,35 @@ namespace XenOS
                 {
                     if (disk.DriveType == DriveType.CDRom)
                     {
-                        Console.WriteLine("CD-Rom: " + disk.Name);
+                        Console.WriteLine("CD-ROM          : " + disk.Name);
                     }
                     else if (disk.DriveType == DriveType.Removable)
                     {
-                        Console.WriteLine("Removable Disk: " + disk.Name);
+                        Console.WriteLine("Removable Disk  : " + disk.Name);
                     }
                     else if (disk.DriveType == DriveType.Unknown)
                     {
-                        Console.WriteLine("Disk: " + disk.Name);
-                    }
-                    else if (disk.DriveType == DriveType.Removable)
-                    {
-                        Console.WriteLine("Removable Disk: " + disk.Name);
+                        Console.WriteLine("Unknown Disk    : " + disk.Name);
                     }
                     else if (disk.DriveType == DriveType.Ram)
                     {
-                        Console.WriteLine("Ram Disk: " + disk.Name);
+                        Console.WriteLine("RAM Disk        : " + disk.Name);
                     }
                     else if (disk.DriveType == DriveType.Fixed)
                     {
-                        Console.WriteLine("Fixed Disk: " + disk.Name);
+                        Console.WriteLine("Fixed Disk      : " + disk.Name);
                     }
                     else if (disk.DriveType == DriveType.Network)
                     {
-                        Console.WriteLine("Network Disk: " + disk.Name);
+                        Console.WriteLine("Network Disk    : " + disk.Name);
                     }
-                    Console.WriteLine("Volume label: " + disk.VolumeLabel);
-                    Console.WriteLine("Size: " + disk.TotalSize);
+                    Console.WriteLine("Volume label    : " + disk.VolumeLabel);
+                    Console.WriteLine("Size            : " + disk.TotalSize);
                     Console.WriteLine("Total free space: " + disk.TotalFreeSpace);
-                    Console.WriteLine("Available space: " + disk.AvailableFreeSpace);
-                    Console.WriteLine("Root directory: " + disk.RootDirectory);
-                    Console.WriteLine("Format: " + disk.DriveFormat);
-                    Console.WriteLine("Is Ready: " + disk.IsReady.ToString());
+                    Console.WriteLine("Available space : " + disk.AvailableFreeSpace);
+                    Console.WriteLine("Root directory  : " + disk.RootDirectory);
+                    Console.WriteLine("Format          : " + disk.DriveFormat);
+                    Console.WriteLine("Is Ready        : " + disk.IsReady.ToString());
                     Console.WriteLine();
                 }
             }
@@ -1091,15 +1111,60 @@ namespace XenOS
                 games.SelectGame();
             }
 
+            // PCI (List PCI devices)
+            else if(input == "pci")
+            {
+                foreach(var device in Cosmos.HAL.PCI.Devices)
+                {
+                    Console.WriteLine("ID: {0}\nvID: {1}\nSUBCLASS: {2}\nSTATUS: {3}\nSLOT: {4}\nREV ID: {5}\n", device.DeviceID, device.VendorID, device.Subclass, device.Status, device.slot, device.RevisionID);
+                }
+            }
+
             // EMPTY COMMAND
             else if (input == "");
 
-            // BAD COMMAND
+            // EXEC APP, OR BAD COMMAND
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid command: \"" + input + "\"");
-                Console.ForegroundColor = ConsoleColor.White;
+                var path = input.Substring(4);
+                if (File.Exists(path))
+                {
+                    path = Path.GetFullPath(input.Substring(4));
+                    try
+                    {
+                        if (!Directory.Exists(@"0:\framework\"))
+                        {
+                            throw new DirectoryNotFoundException("The DotNetParser framework wasn't found!");
+                        }
+                        try
+                        {
+                            DotNetFile dotNetFile = new DotNetFile(path);
+                            var clr = new libDotNetClr.DotNetClr(dotNetFile, "0:\\Framework\\");
+                            clr.RegisterCustomInternalMethod("System.Console.WriteLine", WriteLine);
+                            clr.RegisterCustomInternalMethod("WriteAllText", WriteAllText);
+                            clr.RegisterCustomInternalMethod("ReadAllText", ReadAllText);
+                            clr.RegisterCustomInternalMethod("ReadLine", ReadLine);
+                            clr.RegisterCustomInternalMethod("ReadKey", ReadKey);
+                            clr.RegisterCustomInternalMethod("DeleteFile", DeleteFile);
+                            clr.RegisterCustomInternalMethod("CreateFile", CreateFile);
+                            clr.Start();
+                        }
+                        catch (Exception EX)
+                        {
+                            Console.WriteLine("ERROR: " + EX.Message);
+                        }
+                    }
+                    catch (Exception EX)
+                    {
+                        Console.WriteLine("ERROR: " + EX.Message);
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid command: \"" + input + "\"");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
         }
 

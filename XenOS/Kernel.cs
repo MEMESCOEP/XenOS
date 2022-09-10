@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cosmos.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -9,16 +10,14 @@ namespace XenOS
     public class Kernel : Sys.Kernel
     {
         // Variables
-        public static string KernelVersion = "6.9";
+        public static string KernelVersion = "7.0";
 
         // Functions
         protected override void BeforeRun()
         {
-            //Console.SetWindowSize(80, 25);
-
             try
             {
-                Console.WriteLine("[INFO -> Kernel] >> Kernel loaded.");
+                Console.WriteLine("[INFO -> Kernel] >> XenOS Kernel Version {0} loaded.", KernelVersion);
                 Console.WriteLine("[INFO -> Kernel] >> Loading shell...");
                 Shell shell = new Shell();
                 shell.init();
@@ -37,18 +36,32 @@ namespace XenOS
 
         public static void KernelPanic(string exception, string msg)
         {
-            Kernel kernel = new Kernel();
+            if (Drivers.AudioEnabled)
+                Drivers.audioManager.Disable();
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Red;
             Console.Clear();
             Console.WriteLine("[================================ KERNEL PANIC ================================]");
             Console.WriteLine(Shell.OsName + " encountered an unrecoverable error!");
-            Console.WriteLine("EXCEPTION: " + exception + "\n" + "MESSAGE: " + msg + "\nLast Known Address: " + Cosmos.Core.GCImplementation.GetSafePointer(Kernel.ReferenceEquals) + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            Console.WriteLine("EXCEPTION: " + exception + "\n" + "MESSAGE: " + msg + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             Console.CursorVisible = false;
-            Console.Write("System will attempt to reboot...\r");
-            Console.Beep(1000, 500);
-            Console.Beep(750, 500);
+            Console.Write("Please restart your computer using the power button.");
+            foreach (var device in Cosmos.HAL.PCI.Devices)
+            {
+                if (device.VendorID == 5549 || device.VendorID == 8384 || device.VendorID == 32902 || device.VendorID == 4203 || device.VendorID == 4660)
+                {
+                    Console.Beep(1000, 500);
+                    Console.Beep(750, 500);
+                    break;
+                }
+            }
+                    
             while (true)
+            {
+                Cosmos.Core.CPU.Halt();
+            }
+            /*while (true)
             {
                 for(int i = 0; i < 10; i++)
                 {
@@ -57,7 +70,7 @@ namespace XenOS
                 }
                 Power power = new Power();
                 power.reboot();
-            }
+            }*/
         }
     }
 }

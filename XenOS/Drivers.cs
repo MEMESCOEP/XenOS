@@ -20,6 +20,7 @@ namespace XenOS
         public static AudioMixer mixer;
         public static SeekableAudioStream audioStream;
         public static bool AudioEnabled = false;
+        DHCPClient xClient;
 
         // Functions
         public void Audio()
@@ -98,19 +99,17 @@ namespace XenOS
                         throw new Exception("There are no usable network devices installed in the system!");
                     }
 
-                    var xClient = new DHCPClient();
+                    xClient = new DHCPClient();
                     xClient.SendDiscoverPacket();
                     var ip = NetworkConfiguration.CurrentNetworkConfig.IPConfig.IPAddress;
                     xClient.Close();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("[INFO -> Network:DHCP] >> Etablished Network connection via DHCP.\nIPv4 Address: " + ip, 2);
-                    Thread.Sleep(1000);
                 }
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[INFO -> Network:DHCP] >> DHCP Discover failed.\nDetails: " + ex.Message);
-                    Thread.Sleep(1000);
                 }
             }
             catch (Exception EX)
@@ -118,6 +117,18 @@ namespace XenOS
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> Drivers:NET] >> " + EX.Message);
             }
+        }
+
+        public void shutdown()
+        {
+            Console.WriteLine("\n[INFO -> Drivers] >> Setting vfs to null...");
+            vfs = null;
+
+            Console.WriteLine("[INFO -> Drivers] >> Closing network connections...");
+            xClient.Close();
+            xClient.Dispose();
+
+            Console.WriteLine("Done.");
         }
     }
 }

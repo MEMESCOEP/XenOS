@@ -8,7 +8,7 @@ namespace XenOS
         public static API auraApi;
         public static string username = "root";
         public static string OsName = "XenOS";
-        public static string Version = "Alpha 081222_710P";
+        public static string Version = "Alpha 083022_1005P";
         public static string Logo = @"|\  \  /  /|\  ___ \ |\   ___  \|\   __  \|\   ____\     
 \ \  \/  / | \   __/|\ \  \\ \  \ \  \|\  \ \  \___|_    
  \ \    / / \ \  \_|/_\ \  \\ \  \ \  \\\  \ \_____  \   
@@ -16,8 +16,8 @@ namespace XenOS
  /  /\   \    \ \_______\ \__\\ \__\ \_______\____\_\  \ 
 /__/ /\ __\    \|_______|\|__| \|__|\|_______|\_________\
 |__|/ \|__|                                  \|_________|";
-        public static int ScreenWidth = 800;
-        public static int ScreenHeight = 600;
+        public static int ScreenWidth = 1360;
+        public static int ScreenHeight = 768;
         public static ConsoleColor TextColor = ConsoleColor.White;
 
         // Functions

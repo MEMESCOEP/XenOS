@@ -12,13 +12,14 @@ namespace XenOS
         [ManifestResourceStream(ResourceName = "XenOS.Fonts.segoeuil.ttf")]
         static byte[] FontData;
 
+        public bool ActiveWindow = false;
         public int WindowID = 0;
         public int WindowPosX = 0;
         public int WindowPosY = 0;
         public int WindowWidth = 0;
         public int WindowHeight = 0;
         public string Title;
-        public bool ActiveWindow = false;
+        public string WindowText;
         public Color windowColor;
         public Color TitlebarColor;
         public Color TitleColor;
@@ -40,10 +41,13 @@ namespace XenOS
         {
             Pen WindowPen = new Pen(windowColor);
             Pen TitlePen = new Pen(TitlebarColor);
+
             canvas.DrawFilledRectangle(WindowPen, new Cosmos.System.Graphics.Point(WindowPosX, WindowPosY), WindowWidth, WindowHeight);
             canvas.DrawFilledRectangle(TitlePen, new Cosmos.System.Graphics.Point(WindowPosX, WindowPosY), WindowWidth, 40);
             canvas.DrawImageAlpha(GUI.CloseWindow, WindowPosX + (WindowWidth - 20), WindowPosY + 12);
-            TTFManager.DrawStringTTF(canvas, new Pen(TitleColor), Title, "Font", 16f, new Cosmos.System.Graphics.Point(WindowPosX + ((WindowWidth / 2) - (Title.Length * 4)), WindowPosY + 20));
+
+            //TTFManager.DrawStringTTF(canvas, new Pen(TitleColor), Title, "Font", 16f, new Cosmos.System.Graphics.Point(WindowPosX + ((WindowWidth / 2) - (Title.Length * 4)), WindowPosY + 20));
+            canvas.DrawString(Title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, new Pen(TitleColor), new Cosmos.System.Graphics.Point(WindowPosX + ((WindowWidth / 2) - (Title.Length * 4)), WindowPosY + 20));
         }
 
         public bool CheckIfDragged()
@@ -67,6 +71,32 @@ namespace XenOS
             else
             {
                 return false;
+            }
+        }
+
+        public bool CheckIfActive()
+        {
+            if (ActiveWindow)
+            {
+                return true;
+            }
+            else
+            {
+                if(Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left)
+                {
+                    if (IsBetween(Cosmos.System.MouseManager.X, WindowPosX, WindowPosX + WindowWidth) && IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + WindowHeight))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
     }

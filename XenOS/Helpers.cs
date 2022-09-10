@@ -26,5 +26,25 @@ namespace XenOS
                 return sr.ReadLine();
             }
         }
+
+        public static double GetDistance(int p1, int p2)
+        {
+            return Math.Abs(p1 - p2);
+        }
+
+        public static void MoveItemAtIndexToFront<T>(List<T> list, int index)
+        {
+            T item = list[index];
+            for (int i = index; i > 0; i--)
+                list[i] = list[i - 1];
+            list[0] = item;
+        }
+
+        public static void MoveItemAtIndex<T>(List<T> list, int OldIndex, int NewIndex)
+        {
+            T item = list[OldIndex];
+            list.RemoveAt(OldIndex);
+            list.Insert(NewIndex, item);
+        }
     }
 }
