@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "t0OxShOLeB1q8gMt+4nfGr4kXHB+xJeIg1rTg0Hsy+VW5jZH6SFsKqzXlKV7MMg7Pu9DmuP4Z/UDEqHIzjGZVQ==",
+  "success": true,
+  "projectFilePath": "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.build\\0.1.0-localbuild20220825095601\\cosmos.build.0.1.0-localbuild20220825095601.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.common\\0.1.0-localbuild20220825095617\\cosmos.common.0.1.0-localbuild20220825095617.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.core\\0.1.0-localbuild20220825095617\\cosmos.core.0.1.0-localbuild20220825095617.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.debug.kernel\\0.1.0-localbuild20220825095617\\cosmos.debug.kernel.0.1.0-localbuild20220825095617.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.hal2\\0.1.0-localbuild20220825095617\\cosmos.hal2.0.1.0-localbuild20220825095617.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmos.system2\\0.1.0-localbuild20220825095617\\cosmos.system2.0.1.0-localbuild20220825095617.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\cosmosftpserver\\1.0.1\\cosmosftpserver.1.0.1.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\dotnetparser\\0.5.9\\dotnetparser.0.5.9.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\elfsharp\\2.15.0\\elfsharp.2.15.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\il2cpu.api\\0.1.0-localbuild20220825095617\\il2cpu.api.0.1.0-localbuild20220825095617.nupkg.sha512"
+  ],
+  "logs": []
+}
