@@ -96,8 +96,8 @@ namespace XenOS
                             {
 
                             }
-                            GUI gui = new GUI();
-                            gui.INIT();
+                            //GUI gui = new GUI();
+                            //gui.INIT();
                             break;
                         }
                     }                    

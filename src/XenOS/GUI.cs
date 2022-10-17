@@ -85,9 +85,10 @@ namespace XenOS
         Cosmos.System.Graphics.Point IconPos = new Cosmos.System.Graphics.Point(0, 0);
 
         int DiskCount = 0;
+        int FrameCount = 0;
 
         // Functions
-        public void DrawString(Canvas canvas, string str, Pen pen, int x, int y, string font, float size)
+        public void DrawString(Canvas canvas, string str, Pen pen, int x, int y)
         {
             TextLocation.X = x;
             TextLocation.Y = y;
@@ -106,8 +107,8 @@ namespace XenOS
                     ClockTimeLocation.Y = window.WindowPosY + 50;
                     ClockDateLocation.X = window.WindowPosX + 10;
                     ClockDateLocation.Y = window.WindowPosY + 70;
-                    DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), BlackPen, ClockTimeLocation.X, ClockTimeLocation.Y, "Font", 30f);
-                    DrawString(canvas, (Cosmos.HAL.RTC.Month + "-" + Cosmos.HAL.RTC.DayOfTheMonth + "-" + Cosmos.HAL.RTC.Year), BlackPen, ClockDateLocation.X, ClockDateLocation.Y, "Font", 30f);
+                    DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), BlackPen, ClockTimeLocation.X, ClockTimeLocation.Y);
+                    DrawString(canvas, (Cosmos.HAL.RTC.Month + "-" + Cosmos.HAL.RTC.DayOfTheMonth + "-" + Cosmos.HAL.RTC.Year), BlackPen, ClockDateLocation.X, ClockDateLocation.Y);
                 }
             }
         }
@@ -120,29 +121,39 @@ namespace XenOS
             {
                 foreach (var window in windows)
                 {
-                    window.DrawWindow(canvas);
-                    var CPU_Brand = Cosmos.Core.CPU.GetCPUBrandString();
+                    if (windows.IndexOf(window) != windows.Count - 1)
+                    {
+                        window.ActiveWindow = false;
+                    }
+                    else if (window.CheckIfActive())
+                    {
+                        window.ActiveWindow = true;
+                    }
+                    else
+                    {
+                        window.ActiveWindow = true;
+                    }
 
+                    window.DrawWindow(canvas);
                     if (window.Title == "System Information")
                     {
-                        if ((CPU_Brand.Length * 10) >= window.WindowWidth)
+                        /*if ((CPU_Brand.Length * 10) >= window.WindowWidth)
                         {
                             window.WindowWidth = (CPU_Brand.Length * 10);
-                        }
-                        DrawString(canvas, "RAM USAGE: " + Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) + " MB / " + Cosmos.Core.GCImplementation.GetAvailableRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 60, "OpenSans", 16f);
-                        DrawString(canvas, "INSTALLED RAM: " + Cosmos.Core.CPU.GetAmountOfRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 75, "OpenSans", 16f);
-                        //DrawString(canvas, "CPU NAME: " + CPU_Brand, BlackPen, window.WindowPosX + 4, window.WindowPosY + 90, "OpenSans", 16f);
-                        //DrawString(canvas, "CPU VENDOR: " + Cosmos.Core.CPU.GetCPUVendorName(), BlackPen, window.WindowPosX + 4, window.WindowPosY + 105, "OpenSans", 16f);
-                        DrawString(canvas, "DISKS INSTALLED: " + DiskCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 90, "OpenSans", 16f);
+                        }*/
+                        DrawString(canvas, "RAM USED: " + Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) + " MB / " + Cosmos.Core.GCImplementation.GetAvailableRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 45);
+                        DrawString(canvas, "TOTAL RAM: " + Cosmos.Core.CPU.GetAmountOfRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 60);
+                        DrawString(canvas, "DISKS: " + DiskCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 75);
                         if (Cosmos.HAL.NetworkDevice.Devices.Count < 1)
                         {
-                            DrawString(canvas, "IPv4 ADDRESS: [No usable network devices!]", BlackPen, window.WindowPosX + 4, window.WindowPosY + 105, "OpenSans", 16f);
+                            DrawString(canvas, "IPv4 ADDR: NONE", BlackPen, window.WindowPosX + 4, window.WindowPosY + 90);
                         }
                         else
                         {
                             var ip = NetworkConfiguration.CurrentNetworkConfig.IPConfig.IPAddress;
-                            DrawString(canvas, "IPv4 ADDRESS: " + ip, BlackPen, window.WindowPosX + 4, window.WindowPosY + 105, "OpenSans", 16f);
+                            DrawString(canvas, "IPv4 ADDR: " + ip, BlackPen, window.WindowPosX + 4, window.WindowPosY + 90);
                         }
+                        DrawString(canvas, "FRAMES: " + FrameCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 105);
                     }                       
 
                     DrawStrings(canvas, window);
@@ -158,10 +169,18 @@ namespace XenOS
                 canvas.DrawImageAlpha(Clock, Clockpos);
                 canvas.DrawImageAlpha(Notepad, Notepadpos);
             }
+
             canvas.DrawFilledRectangle(TaskbarPen, TaskbarLocation, Shell.ScreenWidth, 40);
             canvas.DrawImageAlpha(XenosLogo, IconPos);
-            DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), BlackPen, Shell.ScreenWidth - 70, Shell.ScreenHeight - 35, "OpenSans", 20f);
-            DrawString(canvas, (Cosmos.HAL.RTC.Month + "-" + Cosmos.HAL.RTC.DayOfTheMonth + "-" + Cosmos.HAL.RTC.Year), BlackPen, Shell.ScreenWidth - 70, Shell.ScreenHeight - 20, "OpenSans", 20f);
+            if(Cosmos.HAL.RTC.Minute < 10)
+            {
+                DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":0" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), BlackPen, Shell.ScreenWidth - 70, Shell.ScreenHeight - 35);
+            }
+            else
+            {
+                DrawString(canvas, (Cosmos.HAL.RTC.Hour + ":" + Cosmos.HAL.RTC.Minute + ":" + Cosmos.HAL.RTC.Second), BlackPen, Shell.ScreenWidth - 70, Shell.ScreenHeight - 35);
+            }
+            DrawString(canvas, (Cosmos.HAL.RTC.Month + "-" + Cosmos.HAL.RTC.DayOfTheMonth + "-" + Cosmos.HAL.RTC.Year), BlackPen, Shell.ScreenWidth - 70, Shell.ScreenHeight - 20);
             canvas.DrawImageAlpha(CursorBMP, (int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y);            
             canvas.Display();
         }
@@ -208,7 +227,14 @@ namespace XenOS
                 Console.WriteLine("[INFO -> GUI] >> Checking if the Bochs Graphics Adapter (BGA) exists...");
 
                 Console.WriteLine("[INFO -> GUI] >> Using the best canvas for the current graphics controller.");
-                canvas = FullScreenCanvas.GetFullScreenCanvas();
+                if (Cosmos.System.VMTools.IsVMWare)
+                {
+                    canvas = FullScreenCanvas.GetFullScreenCanvas();
+                }
+                else
+                {
+                    canvas = new VBECanvas();
+                }
 
                 Console.WriteLine("[INFO -> GUI] >> Current Graphics Controller: " + canvas.Name());
                 Console.WriteLine("[INFO -> GUI] >> Screen resolution: {0}x{1}", canvas.Mode.Columns, canvas.Mode.Rows);
@@ -219,7 +245,7 @@ namespace XenOS
                 if (windows.Count == 0)
                 {
                     MakeWindow(100, 100, 100, 100, Color.Gray, Color.Black, Color.White, "Clock", 0);
-                    MakeWindow(240, 214, 400, 100, Color.Gray, Color.Black, Color.White, "System Information", 1);
+                    MakeWindow(240, 128, 400, 100, Color.Gray, Color.Black, Color.White, "System Information", 1);
                 }
 
                 Cosmos.System.MouseManager.ScreenHeight = (uint)Shell.ScreenHeight;
@@ -245,28 +271,26 @@ namespace XenOS
                             {
                                 typing = Console.KeyAvailable;
 
-                                if (window.CheckIfActive() && Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
+                                /*if (window.CheckIfActive() && Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
                                 {
-                                    ActiveWindow = true;
-                                    window.ActiveWindow = ActiveWindow;
-                                    ActiveWindow = false;
-                                }
+                                    
+                                }*/
 
-                                if (window.CheckIfDragged() && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
+                                if (window.CheckIfDraggable() && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
                                 {
                                     while (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left)
                                     {
-                                        /*if (windows.IndexOf(window) != 0)
+                                        if (windows.IndexOf(window) != windows.Count)
                                         {
-                                            Helpers.MoveItemAtIndex(windows, windows.IndexOf(window), windows.Count - 1);
-                                        }*/
+                                            Helpers.MoveItemAtIndex(windows, windows.IndexOf(window), windows.Count);
+                                        }
 
                                         window.WindowPosX = (int)Cosmos.System.MouseManager.X - 25;
                                         window.WindowPosY = (int)Cosmos.System.MouseManager.Y - 5;
 
                                         window.DrawWindow(canvas); 
                                         Draw(canvas);
-
+                                        FrameCount++;
 
                                         if (Cosmos.Core.GCImplementation.GetAvailableRAM() / (1024) < Cosmos.Core.CPU.GetAmountOfRAM() / 2)
                                         {
@@ -274,22 +298,8 @@ namespace XenOS
                                         }
 
                                         if (Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) >= Cosmos.Core.GCImplementation.GetAvailableRAM() - 5)
-                                        {
-                                            canvas.Disable();
-                                            canvas = null;
-                                            MouseCursor = null;
-                                            MouseCursorRC = null;
-                                            MouseCursorLC = null;
-                                            WallpaperBmp = null;
-                                            PowerOff = null;
-                                            Restart = null;
-                                            ReturnToConsole = null;
-                                            MoveWindow = null;
-                                            Clock = null;
-                                            Notepad = null;
-                                            CloseWindow = null;
-                                            CursorBMP = null;
-                                            windows = null;
+                                        {                                   
+                                            DisableGUI();
                                             Console.WriteLine("GUI ERROR: Out of memory!");
                                             break;
                                         }
@@ -390,7 +400,7 @@ namespace XenOS
                                 DrawNormalCursors = false;
                                 if (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left && MouseClicked == false)
                                 {
-                                    MakeWindow(240, 214, 400, 100, Color.Gray, Color.Black, Color.White, "System Information", 1);
+                                    MakeWindow(240, 128, 400, 100, Color.Gray, Color.Black, Color.White, "System Information", 1);
                                     MouseClicked = true;
                                 }
                                 else
@@ -434,6 +444,7 @@ namespace XenOS
                         // Display everything
                         Draw(canvas);
                         canvas.Display();
+                        FrameCount++;
 
                         if (Cosmos.Core.GCImplementation.GetAvailableRAM() / (1024 * 1024) < Cosmos.Core.CPU.GetAmountOfRAM() / 2)
                         {
@@ -442,21 +453,7 @@ namespace XenOS
 
                         if (Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) >= Cosmos.Core.GCImplementation.GetAvailableRAM() - 5)
                         {
-                            canvas.Disable();
-                            canvas = null;
-                            MouseCursor = null;
-                            MouseCursorRC = null;
-                            MouseCursorLC = null;
-                            WallpaperBmp = null;
-                            PowerOff = null;
-                            Restart = null;
-                            ReturnToConsole = null;
-                            MoveWindow = null;
-                            Clock = null;
-                            Notepad = null;
-                            CloseWindow = null;
-                            CursorBMP = null;
-                            windows = null;
+                            DisableGUI();
                             Console.WriteLine("GUI ERROR: Out of memory!");
                             break;
                         }
@@ -468,27 +465,23 @@ namespace XenOS
 
                             if (key == ConsoleKey.Escape)
                             {
-                                canvas.Disable();
-                                canvas = null;
-                                MouseCursor = null;
-                                MouseCursorRC = null;
-                                MouseCursorLC = null;
-                                WallpaperBmp = null;
-                                PowerOff = null;
-                                Restart = null;
-                                ReturnToConsole = null;
-                                MoveWindow = null;
-                                Clock = null;
-                                Notepad = null;
-                                CloseWindow = null;
-                                CursorBMP = null;
-                                windows = null;
+                                DisableGUI();
                                 break;
                             }
 
                             if (key == ConsoleKey.LeftWindows || key == ConsoleKey.RightWindows)
                             {
                                 ShowMenu = !ShowMenu;
+                            }
+
+                            if(key == ConsoleKey.F2)
+                            {
+                                MakeWindow(420, 69, 121, 121, Color.Gray, Color.Black, Color.White, "IDK lol", 1);
+                            }
+
+                            if (key == ConsoleKey.F1)
+                            {
+                                MakeWindow(320, 200, 121, 121, Color.Gray, Color.Black, Color.White, "XenOS Help", 1);
                             }
                         }
                     }
@@ -500,27 +493,29 @@ namespace XenOS
             }
             catch(Exception ex)
             {
-                canvas = FullScreenCanvas.GetFullScreenCanvas();
-                if(canvas != null)
-                {
-                    canvas.Disable(); 
-                    canvas = null;
-                    MouseCursor = null;
-                    MouseCursorRC = null;
-                    MouseCursorLC = null;
-                    WallpaperBmp = null;
-                    PowerOff = null;
-                    Restart = null;
-                    ReturnToConsole = null;
-                    MoveWindow = null;
-                    Clock = null;
-                    Notepad = null;
-                    CloseWindow = null;
-                    CursorBMP = null;
-                    windows = null;
-                    Console.WriteLine("GUI ERROR: " + ex.Message);
-                }                
+                DisableGUI();
+                Console.WriteLine("GUI ERROR: " + ex.Message);
             }
+        }
+
+        public void DisableGUI()
+        {
+            canvas.Disable();
+            canvas = null;
+            MouseCursor = null;
+            MouseCursorRC = null;
+            MouseCursorLC = null;
+            WallpaperBmp = null;
+            PowerOff = null;
+            Restart = null;
+            ReturnToConsole = null;
+            MoveWindow = null;
+            Clock = null;
+            Notepad = null;
+            CloseWindow = null;
+            CursorBMP = null;
+            windows = null;
+            Console.Clear();
         }
     }
 }

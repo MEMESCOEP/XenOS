@@ -43,8 +43,8 @@ namespace XenOS
         public static void MoveItemAtIndex<T>(List<T> list, int OldIndex, int NewIndex)
         {
             T item = list[OldIndex];
-            list.RemoveAt(OldIndex);
             list.Insert(NewIndex, item);
+            list.RemoveAt(OldIndex);
         }
     }
 }

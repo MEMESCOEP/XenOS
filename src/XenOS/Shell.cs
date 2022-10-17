@@ -8,7 +8,7 @@ namespace XenOS
         public static API auraApi;
         public static string username = "root";
         public static string OsName = "XenOS";
-        public static string Version = "Alpha 083022_1005P";
+        public static string Version = "Alpha 101622_727P";
         public static string Logo = @"|\  \  /  /|\  ___ \ |\   ___  \|\   __  \|\   ____\     
 \ \  \/  / | \   __/|\ \  \\ \  \ \  \|\  \ \  \___|_    
  \ \    / / \ \  \_|/_\ \  \\ \  \ \  \\\  \ \_____  \   
