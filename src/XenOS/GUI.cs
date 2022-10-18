@@ -1,4 +1,5 @@
-﻿using System;
+﻿/* Directives */
+using System;
 using System.Drawing;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
@@ -7,11 +8,14 @@ using System.Collections.Generic;
 using System.IO;
 using Cosmos.System.Network.Config;
 
+/* Namespaces */
 namespace XenOS
 {
+    /* Classes */
     internal class GUI
     {
-        // Variables
+        /* Variables */
+        // Resources
         [ManifestResourceStream(ResourceName = "XenOS.Art.Icons.xp_arrow.bmp")]
         static byte[] mouse_cursor_array;
 
@@ -51,7 +55,13 @@ namespace XenOS
         [ManifestResourceStream(ResourceName = "XenOS.Art.Icons.XenOS_LOGO.bmp")]
         static byte[] LogoData;
 
+        // Booleans
         public bool DrawNormalCursors = true;
+        bool MouseClicked = false;
+        bool ShowMenu = false;
+        bool ExitGUI = false;
+
+        // Bitmaps
         Bitmap MouseCursor = new Bitmap(mouse_cursor_array);
         Bitmap MouseCursorRC = new Bitmap(mouse_cursor_array_rc);
         Bitmap MouseCursorLC = new Bitmap(mouse_cursor_array_lc);
@@ -65,38 +75,45 @@ namespace XenOS
         Bitmap Notepad = new Bitmap(NotepadIcon);
         public static Bitmap CloseWindow = new Bitmap(CloseWindowIcon);
         public Bitmap CursorBMP = new Bitmap(mouse_cursor_array);
+
+        // Points
         Cosmos.System.Graphics.Point topleft = new Cosmos.System.Graphics.Point(0, 0);
         Cosmos.System.Graphics.Point PowerIcon = new Cosmos.System.Graphics.Point(10, 10);
         Cosmos.System.Graphics.Point RestartIconPos = new Cosmos.System.Graphics.Point(10, 50);
         Cosmos.System.Graphics.Point RTCpos = new Cosmos.System.Graphics.Point(10, 90);
         Cosmos.System.Graphics.Point Clockpos = new Cosmos.System.Graphics.Point(10, 130);
         Cosmos.System.Graphics.Point Notepadpos = new Cosmos.System.Graphics.Point(10, 170);
-        int prevX = 0, prevY = 0;
-        public static List<WindowManager> windows = new List<WindowManager>();
-        bool MouseClicked = false;
-        Canvas canvas;
-        bool ShowMenu = false;
-        Pen TaskbarPen = new Pen(Color.DarkRed);
-        Pen BlackPen = new Pen(Color.Black);
         Cosmos.System.Graphics.Point TaskbarLocation = new Cosmos.System.Graphics.Point(0, Shell.ScreenHeight - 40);
         Cosmos.System.Graphics.Point ClockTimeLocation = new Cosmos.System.Graphics.Point(0, 0);
         Cosmos.System.Graphics.Point ClockDateLocation = new Cosmos.System.Graphics.Point(0, 0);
         Cosmos.System.Graphics.Point TextLocation = new Cosmos.System.Graphics.Point(0, 0);
         Cosmos.System.Graphics.Point IconPos = new Cosmos.System.Graphics.Point(0, 0);
 
+        // Lists
+        public static List<WindowManager> windows = new List<WindowManager>();
+
+        // Canvases
+        Canvas canvas;
+
+        // Pens
+        Pen TaskbarPen = new Pen(Color.DarkRed);
+        Pen BlackPen = new Pen(Color.Black);
+
+        // Integers
         int DiskCount = 0;
         int FrameCount = 0;
+        int prevX = 0, prevY = 0;
 
-        // Functions
+        /* Functions */
+        // Draw a string
         public void DrawString(Canvas canvas, string str, Pen pen, int x, int y)
         {
             TextLocation.X = x;
             TextLocation.Y = y;
-
-            //TTFManager.DrawStringTTF(canvas, pen, str, font, size, TextLocation);
             canvas.DrawString(str, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, pen, new Cosmos.System.Graphics.Point(x, y));
         }
 
+        // Draw all strings
         public void DrawStrings(Canvas canvas, WindowManager window)
         {
             if (windows.Count > 0)
@@ -113,6 +130,7 @@ namespace XenOS
             }
         }
 
+        // Draw everything
         public void Draw(Canvas canvas)
         {
             canvas.DrawImage(WallpaperBmp, topleft);
@@ -136,29 +154,32 @@ namespace XenOS
 
                     window.DrawWindow(canvas);
                     if (window.Title == "System Information")
-                    {
-                        /*if ((CPU_Brand.Length * 10) >= window.WindowWidth)
-                        {
-                            window.WindowWidth = (CPU_Brand.Length * 10);
-                        }*/
-                        DrawString(canvas, "RAM USED: " + Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) + " MB / " + Cosmos.Core.GCImplementation.GetAvailableRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 45);
-                        DrawString(canvas, "TOTAL RAM: " + Cosmos.Core.CPU.GetAmountOfRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 60);
-                        DrawString(canvas, "DISKS: " + DiskCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 75);
+                    {   
+                        DrawString(canvas, "RAM USED: " + Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) + " MB/" + Cosmos.Core.GCImplementation.GetAvailableRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 45);
+                        DrawString(canvas, "DISKS: " + DiskCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 60);
                         if (Cosmos.HAL.NetworkDevice.Devices.Count < 1)
                         {
-                            DrawString(canvas, "IPv4 ADDR: NONE", BlackPen, window.WindowPosX + 4, window.WindowPosY + 90);
+                            DrawString(canvas, "IPv4: NONE", BlackPen, window.WindowPosX + 4, window.WindowPosY + 75);
                         }
                         else
                         {
                             var ip = NetworkConfiguration.CurrentNetworkConfig.IPConfig.IPAddress;
-                            DrawString(canvas, "IPv4 ADDR: " + ip, BlackPen, window.WindowPosX + 4, window.WindowPosY + 90);
+                            DrawString(canvas, "IPv4: " + ip, BlackPen, window.WindowPosX + 4, window.WindowPosY + 75);
                         }
-                        DrawString(canvas, "FRAMES: " + FrameCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 105);
-                    }                       
+                        DrawString(canvas, "FRAMES: " + FrameCount, BlackPen, window.WindowPosX + 4, window.WindowPosY + 90);
+
+                        //DrawString(canvas, "TOTAL RAM: " + Cosmos.Core.CPU.GetAmountOfRAM() + " MB", BlackPen, window.WindowPosX + 4, window.WindowPosY + 60);
+                        /*if ((CPU_Brand.Length * 10) >= window.WindowWidth)
+                        {
+                            window.WindowWidth = (CPU_Brand.Length * 10);
+                        }*/
+                    }
 
                     DrawStrings(canvas, window);
                 }
             }
+
+            /* If the menu should be shown, draw any icons and/or shapes */
 
             if (ShowMenu)
             {
@@ -185,6 +206,7 @@ namespace XenOS
             canvas.Display();
         }
 
+        // Create a new window with the specified position, dimensions, colors, and title (and possibly window ID, if required)
         public void MakeWindow(int width, int height, int posX, int posY, Color TitleBarColor, Color TitleColor, Color windowColor, string Title, int windowID)
         {
             WindowManager windowManager = new WindowManager();
@@ -200,6 +222,7 @@ namespace XenOS
             windowManager.init();
         }
 
+        // Initialize the GUI and draw everything
         public void INIT()
         {
             try
@@ -229,11 +252,19 @@ namespace XenOS
                 Console.WriteLine("[INFO -> GUI] >> Using the best canvas for the current graphics controller.");
                 if (Cosmos.System.VMTools.IsVMWare)
                 {
-                    canvas = FullScreenCanvas.GetFullScreenCanvas();
+                    Console.WriteLine("[INFO -> GUI] >> Using the VMWareSVGAII graphics controller (Running on VMWare).");
+                    canvas = new SVGAIICanvas();
                 }
                 else
                 {
-                    canvas = new VBECanvas();
+                    if (Cosmos.Core.VBE.IsAvailable())
+                    {
+                        canvas = new VBECanvas();
+                    }
+                    else
+                    {
+                        canvas = FullScreenCanvas.GetFullScreenCanvas();
+                    }
                 }
 
                 Console.WriteLine("[INFO -> GUI] >> Current Graphics Controller: " + canvas.Name());
@@ -242,15 +273,9 @@ namespace XenOS
                 canvas.Mode = new Mode(Shell.ScreenWidth, Shell.ScreenHeight, ColorDepth.ColorDepth32);
                 canvas.Clear(Color.Green);
 
-                if (windows.Count == 0)
-                {
-                    MakeWindow(100, 100, 100, 100, Color.Gray, Color.Black, Color.White, "Clock", 0);
-                    MakeWindow(240, 128, 400, 100, Color.Gray, Color.Black, Color.White, "System Information", 1);
-                }
-
                 Cosmos.System.MouseManager.ScreenHeight = (uint)Shell.ScreenHeight;
-                Cosmos.System.MouseManager.ScreenWidth = (uint)Shell.ScreenWidth - 10;
-                Cosmos.System.MouseManager.MouseSensitivity = 1;
+                Cosmos.System.MouseManager.ScreenWidth = (uint)Shell.ScreenWidth - MouseCursor.Width;
+                Cosmos.System.MouseManager.MouseSensitivity = Shell.MouseSensitivity;
 
                 IconPos.X = 5;
                 IconPos.Y = Shell.ScreenHeight - (int)PowerOff.Height - 4;
@@ -260,52 +285,71 @@ namespace XenOS
                 bool typing = false;
                 int count = 0;
 
+                /* Drawing / Event handling loop */
                 while (true)
                 {
                     try
                     {
-                        // Move Window
+                        /* Make sure that there are 1 or more windows before attempting to draw them */
                         if (windows.Count > 0)
                         {
+                            /* Loop to handle each window */
                             foreach (var window in windows)
                             {
+                                /* If the user is typing something, change the "typing" variable */
                                 typing = Console.KeyAvailable;
 
-                                /*if (window.CheckIfActive() && Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
-                                {
-                                    
-                                }*/
-
+                                /* Detect if the window is being moved */
                                 if (window.CheckIfDraggable() && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
                                 {
+                                    /* While the window is being moved, update the screen */
                                     while (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left)
                                     {
+                                        DrawNormalCursors = false;
+                                        ChangeCursor(MoveWindow);
+
+                                        /* If the window isn't already last in the window list, move it. This ensures that the active window will appear on top of all other windows */
                                         if (windows.IndexOf(window) != windows.Count)
                                         {
                                             Helpers.MoveItemAtIndex(windows, windows.IndexOf(window), windows.Count);
                                         }
 
+                                        /* Update the window positions to the mouse coords */
                                         window.WindowPosX = (int)Cosmos.System.MouseManager.X - 25;
                                         window.WindowPosY = (int)Cosmos.System.MouseManager.Y - 5;
 
+                                        /* Draw everything */
                                         window.DrawWindow(canvas); 
                                         Draw(canvas);
                                         FrameCount++;
 
+                                        /* Collect unused memory, but only when required */
                                         if (Cosmos.Core.GCImplementation.GetAvailableRAM() / (1024) < Cosmos.Core.CPU.GetAmountOfRAM() / 2)
                                         {
                                             Cosmos.Core.Memory.Heap.Collect();
                                         }
 
+                                        /* If there isn't enough memory to keep the GUI running, return to the console */
                                         if (Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) >= Cosmos.Core.GCImplementation.GetAvailableRAM() - 5)
                                         {                                   
                                             DisableGUI();
                                             Console.WriteLine("GUI ERROR: Out of memory!");
                                             break;
                                         }
+
+                                        /* If the GUI is meant to be exittig, then break out of the loop */
+                                        if (ExitGUI)
+                                        {
+                                            break;
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    ResetCursor();
+                                }
 
+                                /* Check if the window should be closed and remove it from the windows list */
                                 if (window.CheckIfClosed() && Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left)
                                 {
                                     windows.Remove(window);
@@ -314,19 +358,19 @@ namespace XenOS
                             }
                         }
 
-                        // Detect if the mouse was moved or clicked
+                        /* Detect if the mouse was moved or clicked */
                         if (prevX != (int)Cosmos.System.MouseManager.X || prevY != (int)Cosmos.System.MouseManager.Y || Cosmos.System.MouseManager.MouseState != Cosmos.System.MouseManager.LastMouseState)
                         {
                             prevX = (int)Cosmos.System.MouseManager.X;
                             prevY = (int)Cosmos.System.MouseManager.Y;
                         }
 
-                        // Draw normal cursors
+                        /* Draw normal cursors */
                         if (DrawNormalCursors)
                         {
                             if(Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.None)
                             {
-                                CursorBMP = MouseCursor;
+                                ResetCursor();
                             }
                         }
 
@@ -339,16 +383,15 @@ namespace XenOS
                                 DrawNormalCursors = false;
                                 if (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left && MouseClicked == false)
                                 {
-                                    canvas.Disable();
+                                    DisableGUI();
                                     Console.WriteLine("Shutting down...");
                                     Power power = new Power();
                                     power.shutdown();
                                     Kernel.KernelPanic("Shutdown Failed!", "Unknown Exception");
-                                    break;
                                 }
                                 else
                                 {
-                                    CursorBMP = MouseCursorLC;
+                                    ChangeCursor(MouseCursorLC);
                                 }
                             }
                             else if ((10 <= (int)Cosmos.System.MouseManager.X && (int)Cosmos.System.MouseManager.X <= 40) && (40 <= (int)Cosmos.System.MouseManager.Y && (int)Cosmos.System.MouseManager.Y <= 80))
@@ -357,15 +400,14 @@ namespace XenOS
                                 if (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left && MouseClicked == false)
                                 {
                                     Console.WriteLine("Rebooting...");
-                                    canvas.Disable();
+                                    DisableGUI();
                                     Power power = new Power();
                                     power.reboot();
                                     Kernel.KernelPanic("Reboot Failed!", "Unknown Exception");
-                                    break;
                                 }
                                 else
                                 {
-                                    CursorBMP = MouseCursorLC;
+                                    ChangeCursor(MouseCursorLC);
                                 }
                             }
                             else if ((10 <= (int)Cosmos.System.MouseManager.X && (int)Cosmos.System.MouseManager.X <= 40) && (70 <= (int)Cosmos.System.MouseManager.Y && (int)Cosmos.System.MouseManager.Y <= 110))
@@ -374,12 +416,12 @@ namespace XenOS
                                 if (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.Left && Cosmos.System.MouseManager.LastMouseState != Cosmos.System.MouseState.Left && MouseClicked == false)
                                 {
                                     Console.WriteLine("Returning to console...");
-                                    canvas.Disable();
+                                    DisableGUI();
                                     break;
                                 }
                                 else
                                 {
-                                    CursorBMP = MouseCursorLC;
+                                    ChangeCursor(MouseCursorLC);
                                 }
                             }
                             else if ((10 <= (int)Cosmos.System.MouseManager.X && (int)Cosmos.System.MouseManager.X <= 40) && (110 <= (int)Cosmos.System.MouseManager.Y && (int)Cosmos.System.MouseManager.Y <= 160))
@@ -392,7 +434,7 @@ namespace XenOS
                                 }
                                 else
                                 {
-                                    CursorBMP = MouseCursorLC;
+                                    ChangeCursor(MouseCursorLC);
                                 }
                             }
                             else if ((10 <= (int)Cosmos.System.MouseManager.X && (int)Cosmos.System.MouseManager.X <= 40) && (160 <= (int)Cosmos.System.MouseManager.Y && (int)Cosmos.System.MouseManager.Y <= 210))
@@ -405,16 +447,16 @@ namespace XenOS
                                 }
                                 else
                                 {
-                                    CursorBMP = MouseCursorLC;
+                                    ChangeCursor(MouseCursorLC);
                                 }
                             }
                             else
                             {
-                                DrawNormalCursors = true;
+                                ResetCursor();
                             }
                         }
 
-                        /* Detect if the user pressed */
+                        /* Detect if the user pressed the menu button or the left windows key */
                         if ((5 <= (int)Cosmos.System.MouseManager.X && (int)Cosmos.System.MouseManager.X <= 40) && (Shell.ScreenHeight - 40 <= (int)Cosmos.System.MouseManager.Y && (int)Cosmos.System.MouseManager.Y <= Shell.ScreenHeight))
                         {
                             DrawNormalCursors = false;
@@ -425,7 +467,7 @@ namespace XenOS
                             }
                             else
                             {
-                                CursorBMP = MouseCursorLC;
+                                ChangeCursor(MouseCursorLC);
                             }
                         }
                         else
@@ -433,6 +475,7 @@ namespace XenOS
                             DrawNormalCursors = true;
                         }
 
+                        /* Detect if the user released a mouse button */
                         if (MouseClicked)
                         {
                             if (Cosmos.System.MouseManager.MouseState == Cosmos.System.MouseState.None)
@@ -441,16 +484,18 @@ namespace XenOS
                             }
                         }
 
-                        // Display everything
+                        /* Display everything and increment the frame count */
                         Draw(canvas);
                         canvas.Display();
                         FrameCount++;
 
+                        /* Collect memory that isn't in use, but only when required */
                         if (Cosmos.Core.GCImplementation.GetAvailableRAM() / (1024 * 1024) < Cosmos.Core.CPU.GetAmountOfRAM() / 2)
                         {
                             Cosmos.Core.Memory.Heap.Collect();
                         }
 
+                        /* Exit the GUI if there isn't enough memory to continue */
                         if (Cosmos.Core.GCImplementation.GetUsedRAM() / (1024 * 1024) >= Cosmos.Core.GCImplementation.GetAvailableRAM() - 5)
                         {
                             DisableGUI();
@@ -458,7 +503,7 @@ namespace XenOS
                             break;
                         }
 
-                        // If the escape key is pressed, exit the gui
+                        /* If the escape key is pressed, exit the GUI. Also handle other key presses */
                         if (Console.KeyAvailable)
                         {
                             var key = Console.ReadKey().Key;
@@ -484,10 +529,22 @@ namespace XenOS
                                 MakeWindow(320, 200, 121, 121, Color.Gray, Color.Black, Color.White, "XenOS Help", 1);
                             }
                         }
+
+                        /* Exit the loop if the GUI is closing */
+                        if (ExitGUI)
+                        {
+                            break;
+                        }
                     }
                     catch
                     {
 
+                    }
+
+                    /* Exit the loop if the GUI is closing */
+                    if (ExitGUI)
+                    {
+                        break;
                     }
                 }
             }
@@ -500,6 +557,7 @@ namespace XenOS
 
         public void DisableGUI()
         {
+            ExitGUI = true;
             canvas.Disable();
             canvas = null;
             MouseCursor = null;
@@ -516,6 +574,23 @@ namespace XenOS
             CursorBMP = null;
             windows = null;
             Console.Clear();
+        }
+
+        public void ChangeCursor(Bitmap newCursor)
+        {
+            DrawNormalCursors = false;
+            CursorBMP = newCursor;
+        }
+
+        public void ResetCursor()
+        {
+            DrawNormalCursors = true;
+            CursorBMP = MouseCursor;
+        }
+
+        public void DisplayMenu()
+        {
+            
         }
     }
 }

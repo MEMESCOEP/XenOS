@@ -66,6 +66,7 @@
       <None Remove="Fonts\OpenSans-Regular.ttf" />
       <None Remove="Fonts\segoeuil.ttf" />
       <None Remove="Fonts\seguibl.ttf" />
+      <None Remove="TestApps\ELF_TEST.bin" />
       <None Remove="TestApps\HelloWorld.exe" />
       <None Remove="TestApps\noruntime.exe" />
       <None Remove="TestApps\program.bin" />
@@ -109,6 +110,7 @@
       <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
       <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
       <EmbeddedResource Include="Fonts\segoeuil.ttf" />
+      <EmbeddedResource Include="TestApps\ELF_TEST.bin" />
       <EmbeddedResource Include="TestApps\HelloWorld.exe" />
     </ItemGroup>
 

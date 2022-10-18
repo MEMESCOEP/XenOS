@@ -5,12 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace XenOS
 {
     internal class AppExecutor
     {
-        public unsafe class PE32
+        private byte[] UnmanagedString(string s)
+        {
+            var re = new byte[s.Length + 1];
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                re[i] = (byte)s[i];
+            }
+
+            re[s.Length + 1] = 0; //c requires null terminated string
+            return re;
+        }
+
+
+        /*public unsafe class PE32
         {
             public static byte* ProgramAdress = null;
 
@@ -319,6 +334,6 @@ namespace XenOS
             }
 
             #endregion Nested Types
-        }
+        }*/
     }
 }

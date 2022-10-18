@@ -33,6 +33,13 @@ F:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\DotNetClr.dll
 F:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\DotNetParser.dll
 F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.Properties.Resources.resources
 F:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.GenerateResource.cache
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.AssemblyReference.cache
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.Properties.Resources.resources
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.GenerateResource.cache
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.AssemblyInfoInputs.cache
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.AssemblyInfo.cs
+D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.CoreCompileInputs.cache
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\XenOS.deps.json
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\XenOS.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\XenOS.pdb
@@ -44,13 +51,6 @@ D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\libcs.core.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\libcs.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\libcs.SourceGenerator.dll
 D:\Programming\C#\XenOS\XenOS\bin\Debug\net6.0\XSharp.dll
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.AssemblyReference.cache
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.Properties.Resources.resources
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.GenerateResource.cache
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.GeneratedMSBuildEditorConfig.editorconfig
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.AssemblyInfoInputs.cache
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.AssemblyInfo.cs
-D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.CoreCompileInputs.cache
 D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.csproj.CopyComplete
 D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\XenOS.dll
 D:\Programming\C#\XenOS\XenOS\obj\Debug\net6.0\refint\XenOS.dll

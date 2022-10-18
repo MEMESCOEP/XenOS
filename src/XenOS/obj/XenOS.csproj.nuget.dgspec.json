@@ -10,11 +10,11 @@
         "projectUniqueName": "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj",
         "projectName": "XenOS",
         "projectPath": "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj",
-        "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\Andrew Maney\\.nuget\\packages\\",
         "outputPath": "D:\\Programming\\C#\\XenOS\\XenOS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\andre\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Andrew Maney\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\andre\\AppData\\Roaming\\Cosmos User Kit\\packages\\": {},
+          "C:\\Users\\Andrew Maney\\AppData\\Roaming\\Cosmos User Kit\\packages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -90,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
         }
       }
     }

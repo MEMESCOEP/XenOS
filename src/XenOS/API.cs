@@ -28,9 +28,10 @@ namespace XenOS
             {
                 if (aContext.EAX == 0x01) //Print function.
                 {
-                    byte* dat = AppExecutor.PE32.ProgramAdress + aContext.EDI;
+                    /*byte* dat = AppExecutor.PE32.ProgramAdress + aContext.EDI;
 
                     Console.Write(GetUnicodeString(dat));
+                    */
                 }
                 if (aContext.EAX == 0x02) //Clear function.
                 {
