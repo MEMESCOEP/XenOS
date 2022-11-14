@@ -16,12 +16,12 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * Settings file
 
 ## Screenshots
-<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/GUI.png" />
-<img src="https://github.com/MEMESCOEP/XenOS/raw/main/XenOS/Art/Screenshots/Console.png" />
+<img src="https://github.com/MEMESCOEP/XenOS/raw/main/src/XenOS/Art/Screenshots/GUI.png" />
+<img src="https://github.com/MEMESCOEP/XenOS/raw/main/src/XenOS/Art/Screenshots/Console.png" />
 
 ## System Requirements
 * An x86 CPU
-* 48 MB Minimum RAM, 64 MB or larger recommended
+* 64 MB Minimum RAM, 128 MB or larger recommended
 * At least 16 MB Graphics RAM
 * PS/2 Keyboard
 * (OPTIONAL) PS/2 Mouse, for GUI

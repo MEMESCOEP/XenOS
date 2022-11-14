@@ -1,0 +1,98 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj": {}
+  },
+  "projects": {
+    "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj",
+        "projectName": "XenOS",
+        "projectPath": "D:\\Programming\\C#\\XenOS\\XenOS\\XenOS.csproj",
+        "packagesPath": "C:\\Users\\Andrew Maney\\.nuget\\packages\\",
+        "outputPath": "D:\\Programming\\C#\\XenOS\\XenOS\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Andrew Maney\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\Andrew Maney\\AppData\\Roaming\\Cosmos User Kit\\packages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Cosmos.Build": {
+              "target": "Package",
+              "version": "[0.0.0-*, )",
+              "noWarn": [
+                "NU1604"
+              ]
+            },
+            "Cosmos.Debug.Kernel": {
+              "target": "Package",
+              "version": "[0.0.0-*, )",
+              "noWarn": [
+                "NU1604"
+              ]
+            },
+            "Cosmos.System2": {
+              "target": "Package",
+              "version": "[0.0.0-*, )",
+              "noWarn": [
+                "NU1604"
+              ]
+            },
+            "CosmosFtpServer": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "DotNetParser": {
+              "target": "Package",
+              "version": "[0.5.9, )"
+            },
+            "ELFSharp": {
+              "target": "Package",
+              "version": "[2.15.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

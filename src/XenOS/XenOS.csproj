@@ -1,0 +1,178 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <DebugEnabled>False</DebugEnabled>
+        <VMWareEdition>Player</VMWareEdition>
+        <VBEResolution>1024x768x32</VBEResolution>
+        <BinFormat>Elf</BinFormat>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CompressionType>Gzip</CompressionType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Art\Icons\clock.bmp" />
+      <None Remove="Art\Icons\close_window.bmp" />
+      <None Remove="Art\Icons\notepad.bmp" />
+      <None Remove="Art\Icons\PowerOff.bmp" />
+      <None Remove="Art\Icons\Restart.bmp" />
+      <None Remove="Art\Icons\ReturnToConsole.bmp" />
+      <None Remove="Art\Icons\terminal.bmp" />
+      <None Remove="Art\Icons\XenOS_LOGO.bmp" />
+      <None Remove="Art\Icons\xp_arrow.bmp" />
+      <None Remove="Art\Icons\xp_link.bmp" />
+      <None Remove="Art\Icons\xp_move.bmp" />
+      <None Remove="Art\Icons\xp_pencil.bmp" />
+      <None Remove="Art\Wallpapers\BG.bmp" />
+      <None Remove="Art\Wallpapers\BG_1024x768.bmp" />
+      <None Remove="Art\Wallpapers\BG_1360x768.bmp" />
+      <None Remove="Art\Wallpapers\dream_places.bmp" />
+      <None Remove="Assets\Default.btf" />
+      <None Remove="Audio\amogus.wav" />
+      <None Remove="Audio\he_he_he_ha.wav" />
+      <None Remove="Audio\out_of_gum_x.wav" />
+      <None Remove="Audio\SampleAudio.wav" />
+      <None Remove="Audio\ShutdownSound.wav" />
+      <None Remove="Audio\StartupSound.wav" />
+      <None Remove="DLLs\CosmosTTF.dll" />
+      <None Remove="DLLs\CosmosTTFRenderer.dll" />
+      <None Remove="DLLs\DotNetClr.dll" />
+      <None Remove="DLLs\DotNetParser.dll" />
+      <None Remove="DLLs\libcs.common.dll" />
+      <None Remove="DLLs\libcs.core.dll" />
+      <None Remove="DLLs\libcs.dll" />
+      <None Remove="DLLs\libcs.SourceGenerator.dll" />
+      <None Remove="DLLs\LibDotNetParser.dll" />
+      <None Remove="DLLs\mscorlib.dll" />
+      <None Remove="DLLs\XSharp.dll" />
+      <None Remove="Fonts\DefaultFont.ttf" />
+      <None Remove="Fonts\OpenSans-Regular.ttf" />
+      <None Remove="Fonts\segoeuil.ttf" />
+      <None Remove="Fonts\seguibl.ttf" />
+      <None Remove="TestApps\ELF_TEST.bin" />
+      <None Remove="TestApps\HelloWorld.exe" />
+      <None Remove="TestApps\noruntime.exe" />
+      <None Remove="TestApps\program.bin" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="DLLs\CosmosTTF.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Art\Icons\clock.bmp" />
+      <EmbeddedResource Include="Art\Icons\close_window.bmp" />
+      <EmbeddedResource Include="Art\Icons\notepad.bmp" />
+      <EmbeddedResource Include="Art\Icons\PowerOff.bmp" />
+      <EmbeddedResource Include="Art\Icons\Restart.bmp" />
+      <EmbeddedResource Include="Art\Icons\ReturnToConsole.bmp" />
+      <EmbeddedResource Include="Art\Icons\terminal.bmp" />
+      <EmbeddedResource Include="Art\Icons\XenOS_LOGO.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_arrow.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_link.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_move.bmp" />
+      <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG_1024x768.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG_1360x768.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
+      <EmbeddedResource Include="Assets\Default.btf" />
+      <EmbeddedResource Include="Audio\amogus.wav" />
+      <EmbeddedResource Include="Audio\ShutdownSound.wav" />
+      <EmbeddedResource Include="Audio\StartupSound.wav" />
+      <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
+      <EmbeddedResource Include="DLLs\DotNetClr.dll" />
+      <EmbeddedResource Include="DLLs\DotNetParser.dll" />
+      <EmbeddedResource Include="DLLs\libcs.common.dll" />
+      <EmbeddedResource Include="DLLs\libcs.core.dll" />
+      <EmbeddedResource Include="DLLs\libcs.dll" />
+      <EmbeddedResource Include="DLLs\libcs.SourceGenerator.dll" />
+      <EmbeddedResource Include="DLLs\LibDotNetParser.dll" />
+      <EmbeddedResource Include="DLLs\mscorlib.dll" />
+      <EmbeddedResource Include="DLLs\XSharp.dll" />
+      <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
+      <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
+      <EmbeddedResource Include="Fonts\segoeuil.ttf" />
+      <EmbeddedResource Include="TestApps\ELF_TEST.bin" />
+      <EmbeddedResource Include="TestApps\HelloWorld.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="CosmosFtpServer" Version="1.0.1" />
+        <PackageReference Include="DotNetParser" Version="0.5.9" />
+        <PackageReference Include="ELFSharp" Version="2.15.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="CosmosTTF">
+        <HintPath>DLLs\CosmosTTFRenderer.dll</HintPath>
+      </Reference>
+      <Reference Include="DotNetClr">
+        <HintPath>DLLs\DotNetClr.dll</HintPath>
+      </Reference>
+      <Reference Include="DotNetParser">
+        <HintPath>DLLs\DotNetParser.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs">
+        <HintPath>DLLs\libcs.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.common">
+        <HintPath>DLLs\libcs.common.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.core">
+        <HintPath>DLLs\libcs.core.dll</HintPath>
+      </Reference>
+      <Reference Include="libcs.SourceGenerator">
+        <HintPath>DLLs\libcs.SourceGenerator.dll</HintPath>
+      </Reference>
+      <Reference Include="LibDotNetParser">
+        <HintPath>DLLs\LibDotNetParser.dll</HintPath>
+      </Reference>
+      <Reference Include="PeNet">
+        <HintPath>DLLs\PeNet.dll</HintPath>
+      </Reference>
+      <Reference Include="XSharp">
+        <HintPath>DLLs\XSharp.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="isoFiles\" />
+    </ItemGroup>
+
+</Project>

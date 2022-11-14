@@ -1,3 +1,0 @@
-@echo off
-echo Starting QEMU...
-"C:\Program Files\qemu\qemu-system-x86_64.exe" -cdrom .\XenOS.iso -device vmware-svga -device ac97 -m 64
