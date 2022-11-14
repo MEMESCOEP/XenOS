@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Cosmos.Core.Memory;
+﻿using Cosmos.Core.Memory;
+using System;
 
 namespace CosmosELFCore
 {
@@ -12,10 +9,8 @@ namespace CosmosELFCore
         private ElfFile _elf;
         private byte* _finalExecutible;
 
-        public UnmanagedExecutible(string path)
+        public UnmanagedExecutible(byte* elfbin)
         {
-            byte[] deeta = File.ReadAllBytes(path);
-            byte* elfbin = (byte*)Cosmos.Core.GCImplementation.GetSafePointer(deeta);
             _stream = new MemoryStream(elfbin);
         }
 
@@ -25,8 +20,8 @@ namespace CosmosELFCore
 
 
             /*
-             * 1. determin the total size of the final loaded sections
-             * 2. maloc some space for them and allocate them
+             * 1. determine the total size of the final loaded sections
+             * 2. alloc some space for them and allocate them
              * 3. update headers location information
              */
 
@@ -65,7 +60,7 @@ namespace CosmosELFCore
             }
 
             //alocate final size
-            _finalExecutible = (byte*) Heap.Alloc(totalSize);
+            _finalExecutible = (byte*) Heap.SafeAlloc(totalSize);
 
             var stream = new MemoryStream(_finalExecutible);
             var writer = new BinaryWriter(stream);
@@ -128,7 +123,7 @@ namespace CosmosELFCore
                         //nop
                         break;
                     default:
-                        Console.WriteLine($"Error RelocationType({(int) rel.Type}) not implmented");
+                        Console.WriteLine($"Error: RelocationType({(int) rel.Type}) not implmented");
                         break;
                 }
             }

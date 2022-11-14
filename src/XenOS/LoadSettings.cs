@@ -31,6 +31,18 @@ namespace XenOS
                     {
                         CustomConsole.PlayStartupSound = Helpers.GetLine("0:\\SETTINGS\\settings", 3);
                     }
+
+                    if (Helpers.GetLine("0:\\SETTINGS\\settings", 4) != "$Default")
+                    {
+                        if(Helpers.GetLine("0:\\SETTINGS\\settings", 4) == "true")
+                        {
+                            CustomConsole.AutoStartGUI = true;
+                        }
+                        else
+                        {
+                            CustomConsole.AutoStartGUI = false;
+                        }
+                    }
                 }
                 catch(Exception ex)
                 {

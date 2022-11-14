@@ -19,8 +19,16 @@ namespace XenOS
             //bootChime.PlayShutdownChime();
             if (Drivers.AudioEnabled)
             {
-                AudioPlayer audioPlayer = new AudioPlayer();
-                audioPlayer.PlayWAVFromBytes(ShutdownSound);
+                try
+                {
+                    AudioPlayer audioPlayer = new AudioPlayer();
+                    audioPlayer.PlayWAVFromBytes(ShutdownSound);
+                    while (!Drivers.audioStream.Depleted) ;
+                }
+                catch
+                {
+
+                }
             }
             Cosmos.System.Power.Shutdown();
             Kernel.KernelPanic("Shutdown Failed!", "Unknown Exception");

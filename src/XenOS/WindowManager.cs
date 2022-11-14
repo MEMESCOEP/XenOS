@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using Cosmos.Debug.Kernel;
 using Cosmos.System.Graphics;
 using CosmosTTF;
 using IL2CPU.API.Attribs;
+using Point = Cosmos.System.Graphics.Point;
 
 namespace XenOS
 {
@@ -10,6 +13,7 @@ namespace XenOS
     {
         // Variables
         public bool ActiveWindow = false;
+        public bool IsDraggable = true;
         public int WindowID = 0;
         public int WindowPosX = 0;
         public int WindowPosY = 0;
@@ -21,17 +25,35 @@ namespace XenOS
         public Color TitleBarColor;
         public Color TitleBarColorBG;
         public Color TitleColor;
-        public Cosmos.System.Graphics.Point TitlePos;
-        public Cosmos.System.Graphics.Point TitlebarPos;
-        public Cosmos.System.Graphics.Point BodyPos;
+        public Point TitlePos;
+        public Point TitlebarPos;
+        public Point BodyPos;
+        public List<string> stringElements = new List<string>();
+        public List<Image> imageElements = new List<Image>();
+        public List<Button> buttonElements = new List<Button>();
+        public List<Point> stringPoints = new List<Point>();
+        public List<Point> imagePoints = new List<Point>();
         Pen WindowPen;
         Pen TitleBarPen;
         Pen TitlePen;
 
         // Functions
-        public bool IsBetween(double testValue, double bound1, double bound2)
+        public void MakeNewStringElement(string str, int X, int Y)
         {
-            return (testValue >= Math.Min(bound1, bound2) && testValue <= Math.Max(bound1, bound2));
+            stringElements.Add(str);
+            stringPoints.Add(new Point(X, Y));
+        }
+
+        public void EditStringElement(int index, string str)
+        {
+            stringElements[index] = str;
+        }
+
+        public void MakeNewButtonElement(string text, int X, int Y, Action OnClickAction, int id)
+        {
+            Button button = new Button();
+            button.CreateNewButton(text, OnClickAction, X, Y, id);
+            buttonElements.Add(button);
         }
 
         public void init()
@@ -77,10 +99,39 @@ namespace XenOS
                     TitlePos.X = WindowPosX + ((WindowWidth / 2) - (Title.Length * 4));
                     TitlePos.Y = WindowPosY + 20;
 
-                    canvas.DrawFilledRectangle(WindowPen, BodyPos, WindowWidth, WindowHeight);                    
+                    canvas.DrawFilledRectangle(WindowPen, BodyPos, WindowWidth, WindowHeight);
                     canvas.DrawFilledRectangle(TitleBarPen, TitlebarPos, WindowWidth, 40);
-                    canvas.DrawImageAlpha(GUI.CloseWindow, WindowPosX + (WindowWidth - 20), WindowPosY + 12);
+                    canvas.DrawImage(GUI.CloseWindow, WindowPosX + (WindowWidth - 20), WindowPosY + 12);
                     canvas.DrawString(Title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, TitlePen, TitlePos);
+                    foreach(var element in stringElements)
+                    {
+                        int index = stringElements.IndexOf(element);
+                        if (element.Contains("\n"))
+                        {
+                            int Y_pos = WindowPosY + 40 + stringPoints[index].Y;
+                            foreach (var part in element.Split("\n"))
+                            {
+                                canvas.DrawString(part, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, TitlePen, new Point(WindowPosX + stringPoints[index].X, Y_pos));
+                                Y_pos += 12;
+                            }
+                        }
+                        else
+                        {
+                            canvas.DrawString(element, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, TitlePen, new Point(WindowPosX + stringPoints[index].X, WindowPosY + 40 + stringPoints[index].Y));
+                        }
+                    }
+
+                    /*foreach (var element in buttonElements)
+                    {
+                        int index = buttonElements.IndexOf(element);
+                        element.location = new Point(WindowPosX + 15, WindowPosY + 95);
+                        canvas.DrawFilledRectangle(new Pen(Color.LightGray), element.location, 50, 30);
+                        canvas.DrawString(element.Text, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, TitlePen, element.location);
+                        if (element.CheckIfClicked())
+                        {
+                            element.OnClick();
+                        }
+                    }*/
                 }
             }
             catch
@@ -89,40 +140,57 @@ namespace XenOS
             }
         }
 
-        public bool CheckIfDraggable()
+        public void CloseWindow(WindowManager window)
         {
-            return (IsBetween(Cosmos.System.MouseManager.X, WindowPosX, WindowPosX + (WindowWidth - 40)) && IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + 40));
+            GUI.windows.Remove(window);
         }
 
-        public bool CheckIfClosed()
+        public bool CheckIfDraggable()
         {
-            return (IsBetween(Cosmos.System.MouseManager.X, WindowPosX + WindowWidth, WindowPosX + (WindowWidth - 40)) && IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + 40));
+            if (IsDraggable)
+            {
+                return (Helpers.IsBetween(Cosmos.System.MouseManager.X, WindowPosX - 5, WindowPosX + (WindowWidth - 25)) && Helpers.IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + 40));
+            }
+            return false;
+        }
+
+        public bool CheckIfClosable()
+        {
+            return (Helpers.IsBetween(Cosmos.System.MouseManager.X, WindowPosX + WindowWidth - 5, WindowPosX + (WindowWidth - 25)) && Helpers.IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + 40));
         }
 
         public bool CheckIfActive()
         {
-            if (ActiveWindow)
+            try
             {
-                return true;
-            }
-            else
-            {
-                if(Cosmos.System.MouseManager.MouseState != Cosmos.System.MouseState.None)
+                if (ActiveWindow)
                 {
-                    if (IsBetween(Cosmos.System.MouseManager.X, WindowPosX, WindowPosX + WindowWidth) && IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + WindowHeight))
+                    return true;
+                }
+                else
+                {
+                    if (Cosmos.System.MouseManager.MouseState != Cosmos.System.MouseState.None)
                     {
-                        return true;
+                        if (Helpers.IsBetween(Cosmos.System.MouseManager.X, WindowPosX, WindowPosX + WindowWidth) && Helpers.IsBetween(Cosmos.System.MouseManager.Y, WindowPosY, WindowPosY + WindowHeight))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
                         return false;
                     }
                 }
-                else
-                {
-                    return false;
-                }
             }
+            catch
+            {
+
+            }
+            return false;
         }
     }
 }

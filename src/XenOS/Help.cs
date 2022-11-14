@@ -29,7 +29,7 @@ namespace XenOS
             }
             else if (topic == "graphics")
             {
-                Console.WriteLine("[== GRAPHICS ==]\n1. gui\n2. modes\n3. chgsens <sensitivity (int)>\n\n");
+                Console.WriteLine("[== GRAPHICS ==]\n1. gui\n2. modes\n3. chgsens\n\n");
             }
             else if (topic == "audio")
             {

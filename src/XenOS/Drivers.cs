@@ -21,6 +21,8 @@ namespace XenOS
         public static SeekableAudioStream audioStream;
         public static bool AudioEnabled = false;
         DHCPClient xClient;
+        public static Cosmos.HAL.PIT.PITTimer Timer;
+        public static bool PITTicked = false;
 
         // Functions
         public void Audio()
@@ -63,12 +65,34 @@ namespace XenOS
                 Cosmos.System.FileSystem.VFS.VFSManager.RegisterVFS(vfs);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("[INFO -> DRIVERS:Filesystem] >> Virtual filesystem registered.");
+                Console.ForegroundColor = ConsoleColor.White;
+                foreach (var disk in Cosmos.System.FileSystem.VFS.VFSManager.GetDisks())
+                {
+                    disk.DisplayInformation();
+                    Console.WriteLine("[INFO -> Drivers:Filesystem] >> Mounting all partitions on disk {0}...", Cosmos.System.FileSystem.VFS.VFSManager.GetDisks().IndexOf(disk));
+                    disk.Mount();
+                }
             }
             catch(Exception EX)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR -> Drivers:Filesystem] >> " + EX.Message);
             }
+        }
+
+        public void PITTimer()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("[INFO -> DRIVERS:PIT_Timer] >> Initializing PIT Timer...");
+            Timer = new Cosmos.HAL.PIT.PITTimer(TimerCallback, 1000000000, true);
+            Cosmos.HAL.Global.PIT.RegisterTimer(Timer);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[INFO -> DRIVERS:PIT_Timer] >> PIT Timer initialized.");
+        }
+
+        public void TimerCallback()
+        {
+            PITTicked = true;
         }
 
         public void ConsoleSize()
@@ -99,9 +123,13 @@ namespace XenOS
                         throw new Exception("There are no usable network devices installed in the system!");
                     }
 
+                    Console.WriteLine("[INFO -> Network:DHCP] >> Creating new DHCP client...");
                     xClient = new DHCPClient();
+                    Console.WriteLine("[INFO -> Network:DHCP] >> Sending DHCP discover packet...");
                     xClient.SendDiscoverPacket();
+                    Console.WriteLine("[INFO -> Network:DHCP] >> Retrieving local IP address...");
                     var ip = NetworkConfiguration.CurrentNetworkConfig.IPConfig.IPAddress;
+                    Console.WriteLine("[INFO -> Network:DHCP] >> Closing DHCP client...");
                     xClient.Close();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("[INFO -> Network:DHCP] >> Etablished Network connection via DHCP.\nIPv4 Address: " + ip, 2);
@@ -109,7 +137,7 @@ namespace XenOS
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("[INFO -> Network:DHCP] >> DHCP Discover failed.\nDetails: " + ex.Message);
+                    Console.WriteLine("[ERROR -> Network:DHCP] >> DHCP Discover failed.\nDetails: " + ex.Message);
                 }
             }
             catch (Exception EX)
@@ -121,11 +149,12 @@ namespace XenOS
 
         public void shutdown()
         {
-            Console.WriteLine("\n[INFO -> Drivers] >> Setting vfs to null...");
+            //Console.WriteLine("\n[INFO -> Drivers] >> Setting vfs to null...");
             vfs = null;
 
             Console.WriteLine("[INFO -> Drivers] >> Closing network connections...");
             xClient.Close();
+            Console.WriteLine("[INFO -> Drivers] >> Disposing DHCP client...");
             xClient.Dispose();
 
             Console.WriteLine("Done.");

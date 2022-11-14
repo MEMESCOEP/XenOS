@@ -7,9 +7,10 @@ using System.Threading;
 using LibDotNetParser.CILApi;
 using LibDotNetParser;
 using System.Linq;
-using Cosmos.Core.IOGroup;
 using CosmosELFCore;
-using System.Text;
+using Cosmos.System.FileSystem.ISO9660;
+using Cosmos.System.Audio;
+using Cosmos.System.Audio.IO;
 
 namespace XenOS
 {
@@ -36,6 +37,7 @@ namespace XenOS
         public string CWD = "0:\\";
         public bool KeepCMDOpen = true;
         public static string PlayStartupSound = "1";
+        public static bool AutoStartGUI = false;
 
         /* Functions */
         private byte[] UnmanagedString(string s)
@@ -66,74 +68,8 @@ namespace XenOS
             LoadSettings loadSettings = new LoadSettings();
             loadSettings.Load();
 
-            /* Clear the screen and show the welcome message */
-            Console.Clear();
-            Console.WriteLine(Shell.Logo);
-            Console.WriteLine("\nWelcome to " + Shell.OsName + "! (" + Shell.Version + ")\nType 'help' for a list of commands.");
-
-            /* If there is an autoexec script, run it */
-            if (File.Exists(Path.Combine("0:\\", "autoexec")))
-            {
-                foreach (var line in File.ReadLines(Path.Combine("0:\\", "autoexec")))
-                {
-                    if (Console.KeyAvailable)
-                    {
-                        var ck = Console.ReadKey();
-                        if (ck.Key == ConsoleKey.Escape)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        Interpret(line);
-                    }
-                }
-            }
-
-            /* If the startup sound is enabled and there is an audio device, play it */
-            if (PlayStartupSound == "1")
-            {
-                if (Drivers.AudioEnabled)
-                {
-                    AudioPlayer player = new AudioPlayer();
-                    player.PlayWAVFromBytes(StartupSound);
-                }
-                else
-                {
-                    foreach(var device in Cosmos.HAL.PCI.Devices)
-                    {
-                        if(device.VendorID == 5549 || device.VendorID == 8384 || device.VendorID == 32902 || device.VendorID == 4203 || device.VendorID == 4660)
-                        {
-                            try
-                            {
-                                int freq = 200;
-                                for (int i = 0; i < 9; i += 1)
-                                {
-                                    //Cosmos.HAL.PCSpeaker.Beep((uint)freq, 25);
-                                    for (int w = 0; w < 999999; w++) ;
-                                    freq += 100;
-                                }
-                            }
-                            catch
-                            {
-
-                            }
-
-                            break;
-                        }
-                    }                    
-                }
-            }
-
-            /* If XenOS is running in VMWare, start the GUI automatically */
-            if (Cosmos.System.VMTools.IsVMWare)
-            {
-                GUI gui = new GUI();
-                gui.INIT();
-            }
-
             /* If required libraries and files don't exist, write them to the disk */
+            Console.Write("[INFO -> Console] >> Writing libraries and files to disk...");
             if (!File.Exists(@"0:\framework\mscorlib.dll"))
             {
                 try
@@ -212,14 +148,80 @@ namespace XenOS
                 }
             }
 
-            /* Set the current working directory (only if a filesystem exists!) */
+            /* Clear the screen and show the welcome message */
+            Console.Clear();
+            Console.WriteLine(Shell.Logo);
+            Console.WriteLine("\nWelcome to {0}! ({1})\nType 'help' for a list of commands.", Shell.OsName, Shell.Version);
+
+            /* If there is an autoexec script, run it */
+            if (File.Exists(Path.Combine("0:\\", "autoexec")))
+            {
+                foreach (var line in File.ReadLines(Path.Combine("0:\\", "autoexec")))
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        var ck = Console.ReadKey();
+                        if (ck.Key == ConsoleKey.Escape)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Interpret(line);
+                    }
+                }
+            }
+
+            /* If the startup sound is enabled and there is an audio device, play it */
+            if (PlayStartupSound == "1")
+            {
+                if (Drivers.AudioEnabled)
+                {
+                    //AudioPlayer player = new AudioPlayer();
+                    //player.PlayWAVFromBytes(StartupSound);
+                    MemoryAudioStream SS = MemoryAudioStream.FromWave(StartupSound);
+                    PrismAudio.AudioPlayer.Play(SS);
+                }
+            }
+
+            /* If XenOS is running in VMWare (or anything that has a VMWareSVGAII-compatible graphics adapter), start the GUI automatically */
+            if (Cosmos.System.VMTools.IsVMWare && AutoStartGUI)
+            {
+                GUI gui = new GUI();
+                gui.INIT();
+            }
+
+            /* Set the current working directory only if a filesystem exists, otherwise create an ISO9660 filesystem */
             if (Directory.Exists(CWD))
             {
                 Directory.SetCurrentDirectory(CWD);
             }
             else
             {
-                CWD = "NoFS";
+                var CD_FS = new ISO9660FileSystemFactory();
+                try
+                {
+                    foreach (var partition in Cosmos.HAL.BlockDevice.Partition.Partitions)
+                    {
+                        if (partition.Type == Cosmos.HAL.BlockDevice.BlockDeviceType.RemovableCD)
+                        {
+                            int drivenum = Cosmos.HAL.BlockDevice.Partition.Partitions.IndexOf(partition);
+                            if(drivenum == 0)
+                            {
+                                drivenum = Cosmos.HAL.BlockDevice.Partition.Partitions.Count - 1;
+                            }
+                            var pt = CD_FS.Create(partition, drivenum + ":\\", (long)partition.BlockSize);
+                            Console.Write(pt.RootPath + ": ");
+                            pt.DisplayFileSystemInfo();
+                            CWD = pt.RootPath + "_NoFS";
+                        }
+                    }
+                }
+                catch
+                {
+                    CWD = "NoFS";
+                }
             }
 
             /* Start the command line */
@@ -259,7 +261,13 @@ namespace XenOS
             // PANIC
             if (input == "panic")
             {
-                Kernel.KernelPanic("USER GENERATED PANIC", "User invoked kernel panic from the command line!");
+                Kernel.KernelPanic("USER INVOKED PANIC", "User invoked kernel panic from the command line!");
+            }
+
+            // XMLTEST (Run an XML test)
+            else if (input == "xmltest")
+            {
+                PrismTools.Tests.XMLTest.Run();
             }
 
             // SYSINFO (System information)
@@ -319,17 +327,40 @@ namespace XenOS
             else if (input == "help")
             {
                 Help help = new Help();
-
                 Console.Write("Topics:\nconsole\nsystem\nfilesystem\ngraphics\naudio\nnetwork\npower\n\nEnter a topic >> ");
-
-                string topic = Console.ReadLine();
-                help.ShowHelp(topic);
+                help.ShowHelp(Console.ReadLine());
             }
 
             // ABOUT
             else if (input == "about")
             {
                 About.ShowInfo();
+            }
+
+            // CPUINFO (Show CPU information
+            else if (input == "cpuinfo")
+            {
+                Console.WriteLine("CPU Vendor: " + Cosmos.Core.CPU.GetCPUVendorName());
+                Console.WriteLine("CPU EBP: " + Cosmos.Core.CPU.GetEBPValue());
+                Console.WriteLine("CPU Brand: " + Cosmos.Core.CPU.GetCPUBrandString()); 
+                try
+                {
+                    var cpu_speed = Cosmos.Core.CPU.GetCPUCycleSpeed() / (1024 * 1024);
+                    Console.WriteLine("CPU Speed: " + cpu_speed + " MHz");
+                }
+                catch
+                {
+                    try
+                    {
+                        var cpu_speed = Cosmos.Core.CPU.EstimateCPUSpeedFromName(Cosmos.Core.CPU.GetCPUBrandString()) / (1024 * 1024);
+                        Console.WriteLine("CPU Speed: " + cpu_speed + " MHz");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("CPU Speed: [Failure getting CPU speed]");
+                    }
+                }
+                Console.WriteLine("CPU Uptime: " + Cosmos.Core.CPU.GetCPUUptime());
             }
 
             // EXEC (Execute)
@@ -411,13 +442,80 @@ namespace XenOS
             // SHOWKEY (Display the key that gets pressed)
             else if (input == "showkey")
             {
+                Console.WriteLine("Press ESCAPE to exit");
                 var key = Console.ReadKey();
                 while (key.Key != ConsoleKey.Escape)
                 {
-                    Console.WriteLine(key.KeyChar);
+                    //Console.WriteLine(key.KeyChar);
                     key = Console.ReadKey();
+                    if(key.Key == ConsoleKey.Enter)
+                    {
+                        Console.WriteLine();
+                    }
+
+                    if(key.Key == ConsoleKey.LeftArrow)
+                    {
+                        if (Console.CursorLeft > 0)
+                        {
+                            Console.CursorLeft--;
+                        }
+                    }
+
+                    if (key.Key == ConsoleKey.RightArrow)
+                    {
+                        if (Console.CursorLeft < Console.WindowWidth - 1)
+                        {
+                            Console.CursorLeft++;
+                        }                            
+                    }
+
+                    if (key.Key == ConsoleKey.UpArrow)
+                    {
+                        if (Console.CursorTop > 0)
+                        {
+                            Console.CursorTop--;
+                        }
+                    }
+
+                    if (key.Key == ConsoleKey.DownArrow)
+                    {
+                        if (Console.CursorTop < Console.WindowHeight - 1)
+                        {
+                            Console.CursorTop++;
+                        }
+                    }
+
+                    if (key.Key == ConsoleKey.Backspace)
+                    {
+                        if(Console.CursorLeft > 0)
+                        {
+                            Console.CursorLeft--;
+                            Console.Write(" ");
+                            Console.CursorLeft--;
+                        }
+                    }
+
+                    if (key.Key == ConsoleKey.PageDown)
+                    {
+                        Console.CursorTop = Console.WindowHeight - 1;
+                    }
+
+                    if (key.Key == ConsoleKey.PageUp)
+                    {
+                        Console.CursorTop = 0;
+                    }
+
+                    if (key.Key == ConsoleKey.Home)
+                    {
+                        Console.CursorLeft = 0;
+                    }
+
+                    if (key.Key == ConsoleKey.End)
+                    {
+                        Console.CursorLeft = Console.WindowWidth - 1;
+                    }
                 }
-                Console.WriteLine(key.KeyChar);
+                Console.Clear();
             }
 
             // ELF (Execute ELF apps)
@@ -437,16 +535,18 @@ namespace XenOS
                         {
                             unsafe
                             {
-                                var exe = new UnmanagedExecutible(path);
-                                Console.WriteLine("Loading");
-                                exe.Load();
-                                Console.WriteLine("Linking");
-                                exe.Link();
+                                fixed (byte* ptr = File.ReadAllBytes(path))
+                                {
+                                    PrismELF.UnmanagedExecutible exe = new PrismELF.UnmanagedExecutible(ptr);
+                                    Console.WriteLine("Loading");
+                                    exe.Load();
 
-                                Console.WriteLine("Executing");
+                                    Console.WriteLine("Linking");
+                                    exe.Link();
 
-                                new ArgumentWriter();
-                                exe.Invoke("main");
+                                    Console.WriteLine("Executing");
+                                    exe.Invoke("main");
+                                }
                             }
                         }
                         catch (Exception EX)
@@ -462,6 +562,37 @@ namespace XenOS
                 else
                 {
                     Console.WriteLine("File \"" + path + "\" doesn't exist!");
+                }
+            }
+
+            // TESTELF (Test the elf executor)
+            else if (input == "testelf")
+            {
+                unsafe
+                {
+                    fixed (byte* ptr = Helpers.test_so)
+                    {
+                        var exe = new UnmanagedExecutible(ptr);
+                        exe.Load();
+                        exe.Link();
+
+                        Console.WriteLine("Executing");
+
+                        new ArgumentWriter();
+                        exe.Invoke("tty_clear");
+
+                        new ArgumentWriter()
+                            .Push(5)  //fg
+                            .Push(15); //bg
+                        exe.Invoke("tty_set_color");
+
+                        fixed (byte* str = UnmanagedString("Hello World"))
+                        {
+                            new ArgumentWriter()
+                                .Push((uint)str);
+                            exe.Invoke("tty_puts");
+                        }
+                    }
                 }
             }
 
@@ -1013,7 +1144,7 @@ namespace XenOS
             // VLIST (List mounted volumes)
             else if (input == "vlist")
             {
-                foreach (var disk in Cosmos.System.FileSystem.VFS.VFSManager.GetVolumes())
+                foreach (var disk in Drivers.vfs.GetVolumes())
                 {
                     Console.WriteLine(disk.mFullPath);
                 }
@@ -1022,36 +1153,92 @@ namespace XenOS
             // FORMAT (Format a disk)
             else if (input.StartsWith("format "))
             {
-                var name = input.Substring(7);
-                int index = 0;
-                while (true)
+                try
                 {
-                    foreach (var disk in Cosmos.System.FileSystem.VFS.VFSManager.GetVolumes())
+                    var name = input.Substring(7);
+                    int index = 0;
+                    foreach (var disk in Cosmos.System.FileSystem.VFS.VFSManager.GetDisks())
                     {
-                        if (disk.mName != name)
+                        foreach (var partition in disk.Partitions)
                         {
-                            index++;
-                            continue;
+                            if (partition.RootPath == name)
+                            {
+                                index = disk.Partitions.IndexOf(partition);
+                                if (index >= 0)
+                                {
+                                    if (partition.MountedFS != null)
+                                    {
+                                        Console.WriteLine("Formatting partition {0} of disk {1}...", index, name);
+                                        partition.MountedFS.Format("FAT32", false);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Unable to format partition {0} of disk {1} because the filesystem isn't mounted.", index, name);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Formatting partition 0 of disk {0}...", name);
+                                    foreach (var file in Directory.GetFiles(partition.RootPath))
+                                    {
+                                        File.Delete(file);
+                                    }
+                                    foreach (var dir in Directory.GetDirectories(partition.RootPath))
+                                    {
+                                        Directory.Delete(dir);
+                                    }
+                                }
+                            }
                         }
                     }
+                }
+                catch
+                {
 
-                    foreach (var partition in Cosmos.System.FileSystem.VFS.VFSManager.GetDisks()[index].Partitions)
+                }
+            }
+
+            // MKPART (Make a partition)
+            else if(input == "mkpart")
+            {
+                Console.Write("Disk to partition >> ");
+                var disknum = Console.ReadLine();
+
+                Console.Write("Partition size >> ");
+                var partsize = Console.ReadLine();
+
+                foreach (var disk in Cosmos.System.FileSystem.VFS.VFSManager.GetDisks())
+                {
+                    foreach (var partition in disk.Partitions)
                     {
-                        try
+                        if (partition.RootPath == disknum)
                         {
-                            Console.WriteLine("Partition #" + Cosmos.System.FileSystem.VFS.VFSManager.GetDisks()[index].Partitions);
-                            Console.WriteLine("Host: " + partition.Host);
-                            Console.WriteLine("Root path: " + partition.RootPath);
-                            Console.WriteLine("Has FS: " + partition.HasFileSystem);
-                            Console.WriteLine("Mounted FS: " + partition.MountedFS);
-                            Console.WriteLine();
-                        }
-                        catch (Exception EX)
-                        {
-                            Console.WriteLine("[ERROR] >> " + EX.Message);
+                            Console.WriteLine("Creating new partition on disk {1}...", disknum);
+                            disk.CreatePartition(Int32.Parse(partsize));
                         }
                     }
-                    break;
+                }
+            }
+
+            // CDSK (Clear disk)
+            else if(input == "cdsk")
+            {
+                Console.Write("Disk to clear >> ");
+                var disknum = Console.ReadLine();
+
+                foreach (var disk in Drivers.vfs.GetDisks())
+                {
+                    foreach (var partition in disk.Partitions)
+                    {
+                        if (partition.RootPath == disknum)
+                        {
+                            Console.WriteLine("Clearing disk {0}...", disknum);
+                            disk.Clear();
+                            int index = disk.Partitions.IndexOf(partition);
+                            if(index >= 0)
+                             disk.DeletePartition(index);
+                        }
+                    }
                 }
             }
 
@@ -1126,13 +1313,20 @@ namespace XenOS
 
 
             /* CONSOLE COMMANDS */
+            // POOTIS
+            else if(input == "pootis")
+            {
+                Console.WriteLine("POOTIS!!!!!1!11!!!11!111!!!!!");
+            }
+
             // BEEP
             else if (input.StartsWith("beep "))
             {
                 var freq = input.Substring(5);
                 try
                 {
-                    Console.Beep(Convert.ToInt32(freq), 250);
+                    //Console.Beep(Convert.ToInt32(freq), 250);
+                    Cosmos.System.PCSpeaker.Beep(Convert.ToUInt32(freq), 250);
                 }
                 catch (Exception EX)
                 {
@@ -1194,8 +1388,8 @@ namespace XenOS
                 AudioPlayer player = new AudioPlayer();
                 player.PlayWAVFromBytes(StartupSound);
             }
-
-
+            
+            
 
 
             /* GUI COMMANDS */
@@ -1224,7 +1418,7 @@ namespace XenOS
                 Console.Write("New mouse sensitivity >> ");
                 Shell.MouseSensitivity = Convert.ToInt32(Console.ReadLine());
             }
-
+            
 
 
 
@@ -1277,6 +1471,7 @@ namespace XenOS
             // EXEC APP, OR BAD COMMAND
             else
             {
+                /*
                 var path = input.Substring(4);
                 if (File.Exists(path))
                 {
@@ -1316,6 +1511,11 @@ namespace XenOS
                     Console.WriteLine("Invalid command: \"" + input + "\"");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
+                */
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid command: \"" + input + "\"");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 

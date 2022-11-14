@@ -8,7 +8,7 @@ namespace XenOS
         public static API auraApi;
         public static string username = "root";
         public static string OsName = "XenOS";
-        public static string Version = "Alpha 101822_305P";
+        public static string Version = "Alpha 11-13-22_4:30P";
         public static string Logo = @"|\  \  /  /|\  ___ \ |\   ___  \|\   __  \|\   ____\     
 \ \  \/  / | \   __/|\ \  \\ \  \ \  \|\  \ \  \___|_    
  \ \    / / \ \  \_|/_\ \  \\ \  \ \  \\\  \ \_____  \   
@@ -16,7 +16,7 @@ namespace XenOS
  /  /\   \    \ \_______\ \__\\ \__\ \_______\____\_\  \ 
 /__/ /\ __\    \|_______|\|__| \|__|\|_______|\_________\
 |__|/ \|__|                                  \|_________|";
-        public static int ScreenWidth = 1360;
+        public static int ScreenWidth = 1024;
         public static int ScreenHeight = 768;
         public static int MouseSensitivity = 1;
         public static ConsoleColor TextColor = ConsoleColor.White;
@@ -30,6 +30,7 @@ namespace XenOS
             Console.WriteLine("[INFO -> Shell] >> Loading console...");
             CustomConsole customConsole = new CustomConsole();
             customConsole.CMD();
+            Console.WriteLine("[INFO -> Shell] >> Done.");
         }
 
         public void DriverSetup()
@@ -39,6 +40,7 @@ namespace XenOS
             drivers.Filesystem();
             drivers.Audio();
             drivers.Network_DHCP();
+            drivers.PITTimer();
             Console.WriteLine("[INFO -> Shell:DriverSetup] >> Driver tasks finished.");
         }
 

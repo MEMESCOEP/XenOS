@@ -11,7 +11,7 @@ namespace CosmosELFCore
     {
         public static uint Offset;
         public static uint eax, ebx, ecx, edx, esi, edi, esp, ebp;
-        public static uint* Stack = (uint*)Heap.Alloc(1024);
+        public static uint* Stack = (uint*)Heap.SafeAlloc(1024);
 
         public static void Dump()
         {

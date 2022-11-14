@@ -1,5 +1,0 @@
-D:\Programming\C#\CosmosELF-master\CosmosELFCore\obj\Debug\netstandard2.0\CosmosELFCore.csproj.AssemblyReference.cache
-D:\Programming\C#\CosmosELF-master\CosmosELFCore\obj\Debug\netstandard2.0\CosmosELFCore.GeneratedMSBuildEditorConfig.editorconfig
-D:\Programming\C#\CosmosELF-master\CosmosELFCore\obj\Debug\netstandard2.0\CosmosELFCore.AssemblyInfoInputs.cache
-D:\Programming\C#\CosmosELF-master\CosmosELFCore\obj\Debug\netstandard2.0\CosmosELFCore.AssemblyInfo.cs
-D:\Programming\C#\CosmosELF-master\CosmosELFCore\obj\Debug\netstandard2.0\CosmosELFCore.csproj.CoreCompileInputs.cache
