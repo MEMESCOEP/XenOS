@@ -28,18 +28,6 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * (OPTIONAL) 512 MB Hard disk, formatted with the FAT32 Filesystem
 * (OPTIONAL) Intel E1000 Network card or PCnet-FAST III network card
 
-## Change log:
-* Added AC97 Audio driver
-* Added simple window manager
-* Added append, write, and ping commands
-* Added ability to change username
-* Added time command
-* Added about command
-* Added .NET executable support
-* Added login system
-* Added user management system
-* Added basic File IO to the .NET executable
-
 ## TO-DO
 * Add USB Support
 * Add NTFS / EXT Filesystem support
