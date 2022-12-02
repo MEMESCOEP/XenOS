@@ -48,38 +48,4 @@ Starting the build:
 2. Press the `F5` key or click the button labeled "Cosmos" in the toolbar.
 3. Once VMWare launches, you're done!
 
-## Commands and usage
-1. shutdown - turns of the computer
-2. reboot - reboots the computer
-3. ls - shows a list of files and directories in the current working directory
-4. cd {directory name} - changes the directory
-5. mkdir {directory name} - creates a directory
-6. rmdir {directory name} - deletes a directory
-7. mkf {file name} - creates a file
-8. rm {file name} - deletes a file
-9. cat {file name} - displays the contents of a file
-10. mv {file name} {directory name} - moves a file into the specified directory
-11. append {file name} {text} - appends text to a file
-12. write {file name} {text} - replaces a file's content with the specified text
-13. cls - clear the console
-14. sysinfo - display system information
-15. exec {file name} - execute a file that contains one or more commands
-16. panic - force a kernel panic
-17. echo {text} - display text in the console
-18. time - displays the current time
-19. about - display OS information
-20. audio {file name} - plays a wav audio file
-21. testaudio - tests the audio
-22. beep {frequency} - makes the PC Speaker beep at the specified frequency (37 Hz to 32767 Hz)
-23. ipaddr - show the current IP address
-24. urltoip {url} - converts an HTTP url to an IP address
-25. ftpserver - starts the ftp server
-26. ping {IP address} - ping an IP address
-27. gui - starts the gui
-28. modes - displays all supported resolutions
-29. app - executes a .NET application
-30. adduser - add a user the the login system
-31. rmuser - remove a user from the login system
-32. chgpswd - change a user's login password
-  
-Please note that this Readme is still being edited.
+**Please note that this Readme is still being edited.**
