@@ -1,6 +1,8 @@
 # XenOS
 XenOS is an operating system written in .NET C# and is made possible by the Cosmos OS project.
 <br/>
+***Please note that this operating system is still in its alpha phase. It may break, crash, or cause data loss, so please don't use it on a computer you care about!***
+<br/>
 ## Features
 * Simple File I/O (Currently supports vmware only)
 * Fat32 Filesystem (Currently supports vmware only)
@@ -46,5 +48,3 @@ Starting the build:
 * Fix bugs lol
 * Add Sound Blaster 16 Audio Driver
 * Add more features to .NET exec
-
-**Please note that this Readme is still being edited.**
