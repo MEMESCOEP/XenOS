@@ -28,14 +28,6 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * (OPTIONAL) 512 MB Hard disk, formatted with the FAT32 Filesystem
 * (OPTIONAL) Intel E1000 Network card or PCnet-FAST III network card
 
-## TO-DO
-* Add USB Support
-* Add NTFS / EXT Filesystem support
-* Fix bugs lol
-* Add a notepad to the GUI
-* Add Sound Blaster 16 Audio Driver
-* Add more features to .NET executable support
-
 ## Building XenOS
 Prerequisites:
 * The XenOS source code (You can download it from https://github.com/MEMESCOEP/XenOS/archive/refs/heads/main.zip)
@@ -47,5 +39,12 @@ Starting the build:
 1. Open the project in Visual Studio (Be sure to check if there are any errors!).
 2. Press the `F5` key or click the button labeled "Cosmos" in the toolbar.
 3. Once VMWare launches, you're done!
+
+## TO-DO
+* Add USB Support
+* Add NTFS / EXT Filesystem support
+* Fix bugs lol
+* Add Sound Blaster 16 Audio Driver
+* Add more features to .NET exec
 
 **Please note that this Readme is still being edited.**
