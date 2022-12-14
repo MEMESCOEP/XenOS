@@ -27,7 +27,39 @@
         <CompressionType>Gzip</CompressionType>
         <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
         <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
+        <UseCompilerOptimizations>True</UseCompilerOptimizations>
+        <OptimizationLevel>2</OptimizationLevel>
+        <TraceMode>User</TraceMode>
+        <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+        <Timeout>5</Timeout>
+        <ExtractMapFile>True</ExtractMapFile>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Assets\**" />
+      <Compile Remove="Assets_old\**" />
+      <Compile Remove="Code\Libraries\**" />
+      <Compile Remove="Fonts\**" />
+      <Compile Remove="Libraries\**" />
+      <EmbeddedResource Remove="Assets\**" />
+      <EmbeddedResource Remove="Assets_old\**" />
+      <EmbeddedResource Remove="Code\Libraries\**" />
+      <EmbeddedResource Remove="Fonts\**" />
+      <EmbeddedResource Remove="Libraries\**" />
+      <None Remove="Assets\**" />
+      <None Remove="Assets_old\**" />
+      <None Remove="Code\Libraries\**" />
+      <None Remove="Fonts\**" />
+      <None Remove="Libraries\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="API.cs" />
+      <Compile Remove="AppExecutor.cs" />
+      <Compile Remove="BootChime.cs" />
+      <Compile Remove="Caller.cs" />
+      <Compile Remove="Proccess.cs" />
+    </ItemGroup>
 
     <ItemGroup>
       <None Remove="Art\Icons\clock.bmp" />
@@ -43,18 +75,22 @@
       <None Remove="Art\Icons\xp_link.bmp" />
       <None Remove="Art\Icons\xp_move.bmp" />
       <None Remove="Art\Icons\xp_pencil.bmp" />
+      <None Remove="Art\Wallpapers\1984.bmp" />
       <None Remove="Art\Wallpapers\BG.bmp" />
       <None Remove="Art\Wallpapers\BG_1024x768.bmp" />
       <None Remove="Art\Wallpapers\BG_1280x1024.bmp" />
       <None Remove="Art\Wallpapers\BG_1360x768.bmp" />
+      <None Remove="Art\Wallpapers\BG_800x600.bmp" />
       <None Remove="Art\Wallpapers\dream_places.bmp" />
-      <None Remove="Assets\Default.btf" />
+      <None Remove="Art\Wallpapers\w_rizz.bmp" />
       <None Remove="Audio\amogus.wav" />
       <None Remove="Audio\he_he_he_ha.wav" />
       <None Remove="Audio\out_of_gum_x.wav" />
       <None Remove="Audio\SampleAudio.wav" />
       <None Remove="Audio\ShutdownSound.wav" />
       <None Remove="Audio\StartupSound.wav" />
+      <None Remove="DLLs\aesthetic-view-wallpaper-1024x768-wallpaper.jpg" />
+      <None Remove="DLLs\BasicSharp.dll" />
       <None Remove="DLLs\CosmosTTF.dll" />
       <None Remove="DLLs\CosmosTTFRenderer.dll" />
       <None Remove="DLLs\DotNetClr.dll" />
@@ -65,19 +101,16 @@
       <None Remove="DLLs\libcs.SourceGenerator.dll" />
       <None Remove="DLLs\LibDotNetParser.dll" />
       <None Remove="DLLs\mscorlib.dll" />
+      <None Remove="DLLs\PrismAudio.dll" />
+      <None Remove="DLLs\PrismBinary.dll" />
+      <None Remove="DLLs\PrismELF.dll" />
+      <None Remove="DLLs\PrismGL2D.dll" />
+      <None Remove="DLLs\PrismTools.dll" />
       <None Remove="DLLs\XSharp.dll" />
-      <None Remove="Fonts\DefaultFont.ttf" />
-      <None Remove="Fonts\OpenSans-Regular.ttf" />
-      <None Remove="Fonts\segoeuil.ttf" />
-      <None Remove="Fonts\seguibl.ttf" />
       <None Remove="TestApps\ELF_TEST.bin" />
       <None Remove="TestApps\HelloWorld.exe" />
       <None Remove="TestApps\noruntime.exe" />
       <None Remove="TestApps\program.bin" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Include="DLLs\CosmosTTF.dll" />
     </ItemGroup>
 
     <ItemGroup>
@@ -94,28 +127,20 @@
       <EmbeddedResource Include="Art\Icons\xp_link.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_move.bmp" />
       <EmbeddedResource Include="Art\Icons\xp_pencil.bmp" />
-      <EmbeddedResource Include="Art\Wallpapers\BG.bmp" />
-      <EmbeddedResource Include="Art\Wallpapers\BG_1024x768.bmp" />
-      <EmbeddedResource Include="Art\Wallpapers\BG_1280x1024.bmp" />
-      <EmbeddedResource Include="Art\Wallpapers\BG_1360x768.bmp" />
-      <EmbeddedResource Include="Art\Wallpapers\dream_places.bmp" />
-      <EmbeddedResource Include="Assets\Default.btf" />
-      <EmbeddedResource Include="Audio\amogus.wav" />
+      <EmbeddedResource Include="Art\Wallpapers\1984.bmp" />
+      <EmbeddedResource Include="Art\Wallpapers\BG_800x600.bmp">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Art\Wallpapers\w_rizz.bmp" />
       <EmbeddedResource Include="Audio\ShutdownSound.wav" />
       <EmbeddedResource Include="Audio\StartupSound.wav" />
-      <EmbeddedResource Include="DLLs\CosmosTTFRenderer.dll" />
       <EmbeddedResource Include="DLLs\DotNetClr.dll" />
       <EmbeddedResource Include="DLLs\DotNetParser.dll" />
-      <EmbeddedResource Include="DLLs\libcs.common.dll" />
-      <EmbeddedResource Include="DLLs\libcs.core.dll" />
-      <EmbeddedResource Include="DLLs\libcs.dll" />
-      <EmbeddedResource Include="DLLs\libcs.SourceGenerator.dll" />
       <EmbeddedResource Include="DLLs\LibDotNetParser.dll" />
       <EmbeddedResource Include="DLLs\mscorlib.dll" />
-      <EmbeddedResource Include="DLLs\XSharp.dll" />
-      <EmbeddedResource Include="Fonts\DefaultFont.ttf" />
-      <EmbeddedResource Include="Fonts\OpenSans-Regular.ttf" />
-      <EmbeddedResource Include="Fonts\segoeuil.ttf" />
+      <EmbeddedResource Include="DLLs\PrismAudio.dll" />
+      <EmbeddedResource Include="DLLs\PrismELF.dll" />
+      <EmbeddedResource Include="DLLs\PrismTools.dll" />
       <EmbeddedResource Include="TestApps\ELF_TEST.bin" />
       <EmbeddedResource Include="TestApps\HelloWorld.exe" />
     </ItemGroup>
@@ -130,32 +155,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="CosmosTTF">
-        <HintPath>DLLs\CosmosTTFRenderer.dll</HintPath>
-      </Reference>
       <Reference Include="DotNetClr">
         <HintPath>DLLs\DotNetClr.dll</HintPath>
       </Reference>
       <Reference Include="DotNetParser">
         <HintPath>DLLs\DotNetParser.dll</HintPath>
       </Reference>
-      <Reference Include="libcs">
-        <HintPath>DLLs\libcs.dll</HintPath>
-      </Reference>
-      <Reference Include="libcs.common">
-        <HintPath>DLLs\libcs.common.dll</HintPath>
-      </Reference>
-      <Reference Include="libcs.core">
-        <HintPath>DLLs\libcs.core.dll</HintPath>
-      </Reference>
-      <Reference Include="libcs.SourceGenerator">
-        <HintPath>DLLs\libcs.SourceGenerator.dll</HintPath>
-      </Reference>
       <Reference Include="LibDotNetParser">
         <HintPath>DLLs\LibDotNetParser.dll</HintPath>
-      </Reference>
-      <Reference Include="PeNet">
-        <HintPath>DLLs\PeNet.dll</HintPath>
       </Reference>
       <Reference Include="PrismAudio">
         <HintPath>DLLs\PrismAudio.dll</HintPath>
@@ -165,9 +172,6 @@
       </Reference>
       <Reference Include="PrismELF">
         <HintPath>DLLs\PrismELF.dll</HintPath>
-      </Reference>
-      <Reference Include="PrismGL2D">
-        <HintPath>DLLs\PrismGL2D.dll</HintPath>
       </Reference>
       <Reference Include="PrismTools">
         <HintPath>DLLs\PrismTools.dll</HintPath>
@@ -193,6 +197,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Code\Commands\Math\" />
       <Folder Include="isoFiles\" />
     </ItemGroup>
 

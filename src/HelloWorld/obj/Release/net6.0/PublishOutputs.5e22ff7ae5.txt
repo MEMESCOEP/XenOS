@@ -1,0 +1,4 @@
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\publish\HelloWorld.exe
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\publish\HelloWorld.dll
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\publish\HelloWorld.deps.json
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\publish\HelloWorld.runtimeconfig.json

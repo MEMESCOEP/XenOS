@@ -1,0 +1,13 @@
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\win-x86\HelloWorld.exe
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\win-x86\HelloWorld.deps.json
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\win-x86\HelloWorld.runtimeconfig.json
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\win-x86\HelloWorld.dll
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.csproj.AssemblyReference.cache
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.AssemblyInfoInputs.cache
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.AssemblyInfo.cs
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.csproj.CoreCompileInputs.cache
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.dll
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\refint\HelloWorld.dll
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\HelloWorld.genruntimeconfig.cache
+D:\Programming\C#\XenOS\HelloWorld\obj\Release\net6.0\win-x86\ref\HelloWorld.dll

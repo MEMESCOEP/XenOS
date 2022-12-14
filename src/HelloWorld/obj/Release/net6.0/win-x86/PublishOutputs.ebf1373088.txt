@@ -1,0 +1,1 @@
+D:\Programming\C#\XenOS\HelloWorld\bin\Release\net6.0\publish\win-x86\HelloWorld.exe

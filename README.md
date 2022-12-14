@@ -6,7 +6,7 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 ## Features
 * Simple File I/O (Works best in VMware and only supports FAT32)
 * Fat32 Filesystem (Works best in VMware)
-* Simple GUI (Works best in VMware)
+* Simple GUI (Works best in VMware; Being re-written)
 * Text Editor
 * Autoexec (Auto start on boot)
 * Basic networking (DHCP IP Assignment, ping, etc)
@@ -40,12 +40,13 @@ Prerequisites:
 
 Starting the build:
 <br/>
-*NOTE: If you would like to compile outside of visual studio you may run `dotnet build`.*
+*NOTE: If you would like to compile outside of visual studio you may run `dotnet build`, or `build.bat`.*
 1. Open the project in Visual Studio (Be sure to check if there are any errors!).
 2. Press the `F5` key or click the button labeled "Cosmos" in the toolbar.
 3. Once VMWare launches, you're done!
 
 ## TO-DO
+* Finish re-writing GUI
 * Add USB support
 * Add NTFS and/or EXT Filesystem support
 * Fix bugs lol
