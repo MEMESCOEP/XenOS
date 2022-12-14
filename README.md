@@ -32,18 +32,31 @@ XenOS is an operating system written in .NET C# and is made possible by the Cosm
 * (OPTIONAL) Intel E1000 Network card or PCnet-FAST III network card
 
 ## Building XenOS
+### Windows
 Prerequisites:
 * The XenOS source code (You can download it from https://github.com/MEMESCOEP/XenOS/archive/refs/heads/main.zip)
+* .NET 6.0 SDK
 * VMWare Player
 * Visual Studio 2022
 * The latest version of the Cosmos OS Devkit (https://github.com/CosmosOS/Cosmos, take a look at the wiki for help with installation)
 
 Starting the build:
 <br/>
-*NOTE: If you would like to compile outside of visual studio you may run `dotnet build`, or `build.bat`.*
+*NOTE: If you would like to compile outside of visual studio, run `dotnet build`, or `build.bat`.*
 1. Open the project in Visual Studio (Be sure to check if there are any errors!).
 2. Press the `F5` key or click the button labeled "Cosmos" in the toolbar.
 3. Once VMWare launches, you're done!
+
+### Linux
+Prerequisites:
+* The XenOS source code (You can download it from https://github.com/MEMESCOEP/XenOS/archive/refs/heads/main.zip)
+* .NET 6.0 SDK
+* The latest version of the Cosmos OS Devkit (https://github.com/CosmosOS/Cosmos, take a look at the wiki for help with installation on linux)
+
+Starting the build:
+<br/>
+1. Locate the file called `build.sh`.
+2. Don't do anything yet because I haven't figured this part out yet 🗿.
 
 ## TO-DO
 * Finish re-writing GUI
